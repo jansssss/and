@@ -37,14 +37,13 @@ jobs:
         run: |
           staticrypt index.html \
             --password "$SITE_PASSWORD" \
-            --directory encrypted \
+            --output . \
             --remember 7 \
             --template-title "퇴직연금 분석 대시보드" \
             --template-instructions "접근 권한이 필요합니다. 비밀번호를 입력하세요." \
             --template-color-primary "#e94560" \
             --template-color-secondary "#1a1a2e"
-          cp encrypted/index.html index.html
-          echo "=== Encryption check (first 3 lines) ==="
+          echo "=== Encryption check ==="
           head -3 index.html
         env:
           SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
