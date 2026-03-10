@@ -40,6 +40,7 @@ jobs:
           staticrypt index.html \
             -d encrypted \
             --remember 7 \
+            --short \
             --template-title "퇴직연금 분석 대시보드" \
             --template-instructions "접근 권한이 필요합니다. 비밀번호를 입력하세요." \
             --template-color-primary "#e94560" \
