@@ -90,6 +90,32 @@
   .strat-card ul { padding-left: 18px; }
   .strat-card ul li { color: #eaeaea; font-size: 14px; margin-bottom: 6px; }
 
+  /* CUSTOM SIMULATOR */
+  .custom-grid { display: grid; grid-template-columns: 360px 1fr; gap: 20px; margin-bottom: 20px; }
+  .slider-row { margin-bottom: 18px; }
+  .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .slider-name { font-weight: 600; font-size: 14px; }
+  .slider-meta { display: flex; align-items: center; gap: 10px; }
+  .rate-badge { font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #1a1a2e; }
+  .slider-pct { color: #ffd43b; font-weight: 700; min-width: 42px; text-align: right; }
+  input[type=range] { width: 100%; height: 6px; border-radius: 3px; outline: none; cursor: pointer; background: #0f3460; }
+  .total-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #0f3460; padding-top: 14px; margin-top: 14px; }
+  .total-label { color: #a0a0b0; font-weight: 600; }
+  .total-val { font-size: 22px; font-weight: 800; }
+  .warn-box { font-size: 12px; margin-top: 6px; min-height: 18px; }
+  .rate-display { margin-top: 10px; font-size: 13px; }
+  .sc-btns { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .sc-btn { border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer; font-family: inherit; font-size: 13px; color: white; }
+  .sc-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 16px; }
+  .sc-card { background: #16213e; border-radius: 10px; padding: 14px; border-left: 3px solid #0f3460; }
+  .sc-card-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .sc-card-label { font-weight: 700; }
+  .sc-card-rate { font-size: 18px; font-weight: 800; }
+  .sc-card-alloc { color: #a0a0b0; font-size: 12px; margin: 4px 0; }
+  .sc-card-final { font-weight: 600; font-size: 14px; }
+  .sc-empty { text-align: center; color: #0f3460; padding: 14px; }
+  @media(max-width:900px){ .custom-grid{ grid-template-columns:1fr; } .sc-cards{ grid-template-columns:1fr; } }
+
   /* FUND TABLE */
   #fund-filter { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
   #fund-filter select, #fund-filter input {
@@ -149,6 +175,7 @@
   <button class="tab-btn" onclick="showTab('port')">&#128202; 포트폴리오 추천</button>
   <button class="tab-btn" onclick="showTab('funds')">&#128269; 펀드 탐색기</button>
   <button class="tab-btn" onclick="showTab('strat')">&#127919; 전략 가이드</button>
+  <button class="tab-btn" onclick="showTab('custom')" style="background:#3d1f7a">&#127897;&#65039; 커스텀 시뮬레이터</button>
 </div>
 
 <div class="content">
@@ -247,6 +274,38 @@
     </div>
   </div>
 
+  <!-- ═══ TAB: 커스텀 시뮬레이터 ═══ -->
+  <div id="tab-custom" class="tab-panel">
+    <div class="custom-grid">
+      <!-- 슬라이더 패널 -->
+      <div class="card">
+        <h5 style="color:#cc99ff;margin-bottom:6px">&#127897;&#65039; 자산 비율 설정</h5>
+        <p style="color:#a0a0b0;font-size:12px;margin-bottom:18px">슬라이더로 각 자산 비중을 조절하세요 (합계 100% 권장)</p>
+        <div id="sliders-container"></div>
+        <div class="total-row">
+          <span class="total-label">합계</span>
+          <span class="total-val" id="sl-total">100%</span>
+        </div>
+        <div class="warn-box" id="sl-warn"></div>
+        <div class="rate-display" id="sl-rate-display"></div>
+        <div class="sc-btns">
+          <button class="sc-btn" style="background:#e94560" onclick="saveScenario(0)">시나리오 1 저장</button>
+          <button class="sc-btn" style="background:#00d4aa;color:#000" onclick="saveScenario(1)">시나리오 2 저장</button>
+          <button class="sc-btn" style="background:#4dabf7;color:#000" onclick="saveScenario(2)">시나리오 3 저장</button>
+          <button class="sc-btn" style="background:#0f3460;color:#a0a0b0" onclick="resetScenarios()">초기화</button>
+        </div>
+      </div>
+      <!-- 실시간 시뮬 차트 -->
+      <div class="card" style="padding:14px"><div id="custom-sim-chart"></div></div>
+    </div>
+    <!-- 시나리오 비교 -->
+    <div class="card">
+      <h5 style="color:#cc99ff;margin-bottom:14px">시나리오 비교 (최대 3개)</h5>
+      <div class="sc-cards" id="sc-cards"></div>
+      <div id="scenario-compare-chart"></div>
+    </div>
+  </div>
+
   <!-- ═══ TAB: 전략 ═══ -->
   <div id="tab-strat" class="tab-panel">
     <div class="grid-2">
@@ -272,6 +331,7 @@ function showTab(id) {
   event.currentTarget.classList.add('active');
   if (id === 'funds' && !scatterReady) buildFundCharts();
   if (id === 'strat' && !stratReady) buildStratCharts();
+  if (id === 'custom') initCustom();
 }
 
 // ── 상수 ──────────────────────────────────────────────────────────────────────
@@ -566,6 +626,185 @@ function updateFundCharts() {
     yaxis:{title:'1년 수익률 (%)', gridcolor:'#0f3460'},
     height:380, margin:{t:50,r:20,b:50,l:70}
   }, {responsive:true});
+}
+
+// ── 커스텀 시뮬레이터 ─────────────────────────────────────────────────────────
+const ASSETS = [
+  { name:'예금/원리금보장', rate:4.5,  color:'#6c757d', id:'sl-deposit', def:70 },
+  { name:'K200 인덱스',    rate:12.0, color:'#00d4aa', id:'sl-k200',    def:10 },
+  { name:'글로벌주식(MSCI)',rate:11.0, color:'#4dabf7', id:'sl-global',  def:10 },
+  { name:'IT/AI 테마주',   rate:18.0, color:'#e94560', id:'sl-itai',    def:5  },
+  { name:'TDF 2040 혼합',  rate:10.0, color:'#ffd43b', id:'sl-tdf',     def:5  },
+  { name:'채권/보수형',    rate:6.5,  color:'#cc99ff', id:'sl-bond',    def:0  },
+];
+const scenarios = [null, null, null];
+const SC_COLORS = ['#e94560','#00d4aa','#4dabf7'];
+
+function buildSliders() {
+  const cont = document.getElementById('sliders-container');
+  ASSETS.forEach(a => {
+    cont.innerHTML += `
+    <div class="slider-row">
+      <div class="slider-header">
+        <span class="slider-name">${a.name}</span>
+        <div class="slider-meta">
+          <span class="rate-badge" style="color:${a.color}">${a.rate}%/년</span>
+          <span class="slider-pct" id="${a.id}-val">${a.def}%</span>
+        </div>
+      </div>
+      <input type="range" id="${a.id}" min="0" max="100" step="5" value="${a.def}"
+             style="accent-color:${a.color}" oninput="onSliderChange()">
+    </div>`;
+  });
+  onSliderChange();
+}
+
+function getSliderVals() { return ASSETS.map(a => parseInt(document.getElementById(a.id).value) || 0); }
+
+function getWeightedRate(vals) {
+  const total = vals.reduce((s,v)=>s+v, 0);
+  if (total === 0) return 4.5;
+  return vals.reduce((s,v,i) => s + v * ASSETS[i].rate, 0) / total;
+}
+
+function onSliderChange() {
+  const vals = getSliderVals();
+  const total = vals.reduce((s,v)=>s+v,0);
+  const rate  = getWeightedRate(vals);
+
+  // 각 슬라이더 레이블 업데이트
+  ASSETS.forEach((a,i) => { document.getElementById(`${a.id}-val`).textContent = vals[i]+'%'; });
+
+  // 합계 색상
+  const totalEl = document.getElementById('sl-total');
+  totalEl.textContent = total + '%';
+  totalEl.style.color = total===100 ? '#00d4aa' : total>100 ? '#e94560' : '#ffd43b';
+
+  // 경고
+  const warn = document.getElementById('sl-warn');
+  if (total > 100)      warn.innerHTML = `<span style="color:#e94560">⚠ 합계가 ${total}%입니다. 100%를 초과했습니다.</span>`;
+  else if (total < 100) warn.innerHTML = `<span style="color:#ffd43b">ℹ 합계 ${total}%. 나머지 ${100-total}%는 예금으로 자동 배분됩니다.</span>`;
+  else                   warn.innerHTML = `<span style="color:#00d4aa">✓ 합계 100%</span>`;
+
+  // 수익률 표시
+  document.getElementById('sl-rate-display').innerHTML =
+    `<span style="color:#a0a0b0">가중평균 기대수익률: </span><span style="color:#cc99ff;font-weight:800;font-size:16px">${rate.toFixed(2)}%/년</span>`;
+
+  renderCustomChart(vals, rate);
+}
+
+function renderCustomChart(vals, rate) {
+  const annual = 900, yrs = Array.from({length:16},(_,i)=>i);
+  const customVals = simulate(3800, annual, 15, rate);
+  const depVals    = simulate(3800, annual, 15, 4.5);
+  const final = customVals[15], dep = depVals[15], diff = final - dep;
+
+  const traces = [
+    { x:yrs, y:customVals, name:`내 설정 (${rate.toFixed(1)}%/년)`,
+      mode:'lines+markers', line:{color:'#cc99ff',width:4}, marker:{size:6},
+      hovertemplate:'<b>내 설정</b><br>%{x}년 후: %{y:,.0f}만원<extra></extra>' },
+    { x:yrs, y:depVals, name:'예금 100% (4.5%)',
+      mode:'lines', line:{color:'#6c757d',width:2,dash:'dot'},
+      hovertemplate:'<b>예금 100%</b><br>%{x}년 후: %{y:,.0f}만원<extra></extra>' },
+  ];
+
+  // 선택된 자산별 단독선 (범례 클릭으로 표시)
+  ASSETS.forEach((a,i) => {
+    if (vals[i] > 0) {
+      traces.push({ x:yrs, y:simulate(3800,annual,15,a.rate),
+        name:`${a.name} 단독 (${a.rate}%)`, mode:'lines',
+        line:{color:a.color,width:1,dash:'dash'}, opacity:0.5, visible:'legendonly' });
+    }
+  });
+
+  Plotly.react('custom-sim-chart', traces, {
+    paper_bgcolor:'#16213e', plot_bgcolor:'#16213e',
+    font:{color:'#eaeaea',family:'Malgun Gothic'},
+    title:{text:`15년 후: ${fmt(final)} (예금 대비 ${diff>=0?'+':''}${fmt(diff)})`, font:{size:15,color:'#cc99ff'}},
+    xaxis:{title:'경과 연수',gridcolor:'#0f3460',ticksuffix:'년'},
+    yaxis:{title:'적립금 (만원)',gridcolor:'#0f3460',tickformat:',.0f',ticksuffix:'만'},
+    legend:{bgcolor:'#1a1a2e',bordercolor:'#0f3460',borderwidth:1},
+    hovermode:'x unified', height:460, margin:{t:60,r:20,b:50,l:80}
+  }, {responsive:true});
+}
+
+function saveScenario(slot) {
+  const vals = getSliderVals();
+  const rate = getWeightedRate(vals);
+  const total = vals.reduce((s,v)=>s+v,0);
+  const final = simulate(3800, 900, 15, rate)[15];
+  const alloc = ASSETS.map((a,i)=>vals[i]>0?`${a.name} ${vals[i]}%`:null).filter(Boolean).join(' / ');
+  scenarios[slot] = { rate, total, final, alloc, label:`시나리오 ${slot+1}` };
+  renderScenarios();
+}
+
+function resetScenarios() {
+  scenarios[0]=scenarios[1]=scenarios[2]=null;
+  renderScenarios();
+}
+
+function renderScenarios() {
+  // 카드
+  const cardsEl = document.getElementById('sc-cards');
+  cardsEl.innerHTML = '';
+  scenarios.forEach((sc,i) => {
+    if (sc) {
+      cardsEl.innerHTML += `<div class="sc-card" style="border-left-color:${SC_COLORS[i]}">
+        <div class="sc-card-header">
+          <span class="sc-card-label" style="color:${SC_COLORS[i]}">${sc.label}</span>
+          <span class="sc-card-rate" style="color:${SC_COLORS[i]}">${sc.rate.toFixed(2)}%/년</span>
+        </div>
+        <div class="sc-card-alloc">${sc.alloc}</div>
+        <div class="sc-card-final">15년 후: ${fmt(sc.final)}</div>
+      </div>`;
+    } else {
+      cardsEl.innerHTML += `<div class="sc-card sc-empty">
+        <div style="color:#a0a0b0;margin-bottom:4px">시나리오 ${i+1}</div>
+        <div style="font-size:13px">저장된 시나리오 없음</div>
+      </div>`;
+    }
+  });
+
+  // 비교 차트
+  const yrs = Array.from({length:16},(_,i)=>i);
+  const traces = [{
+    x:yrs, y:simulate(3800,900,15,4.5), name:'예금 100% (기준)',
+    mode:'lines', line:{color:'#6c757d',width:2,dash:'dot'}
+  }];
+  scenarios.forEach((sc,i) => {
+    if (sc) traces.push({
+      x:yrs, y:simulate(3800,900,15,sc.rate),
+      name:`${sc.label} (${sc.rate.toFixed(1)}%/년)`,
+      mode:'lines+markers', line:{color:SC_COLORS[i],width:3}, marker:{size:6},
+      hovertemplate:`<b>${sc.label}</b><br>%{x}년: %{y:,.0f}만원<extra></extra>`
+    });
+  });
+
+  const hasData = scenarios.some(Boolean);
+  const layout = {
+    paper_bgcolor:'#16213e', plot_bgcolor:'#16213e',
+    font:{color:'#eaeaea',family:'Malgun Gothic'},
+    title:{text:'시나리오별 15년 자산 성장 비교', font:{size:15,color:'#cc99ff'}},
+    xaxis:{title:'경과 연수',gridcolor:'#0f3460',ticksuffix:'년'},
+    yaxis:{title:'적립금 (만원)',gridcolor:'#0f3460',tickformat:',.0f',ticksuffix:'만'},
+    legend:{bgcolor:'#1a1a2e'}, hovermode:'x unified',
+    height:400, margin:{t:50,r:20,b:50,l:80},
+    annotations: hasData ? [] : [{
+      text:'슬라이더 설정 후 [시나리오 저장] 버튼을 눌러 비교하세요',
+      xref:'paper',yref:'paper',x:0.5,y:0.5,showarrow:false,
+      font:{size:14,color:'#a0a0b0'}
+    }]
+  };
+  Plotly.react('scenario-compare-chart', traces, layout, {responsive:true});
+}
+
+// 커스텀 탭 열릴 때 초기화
+let customReady = false;
+function initCustom() {
+  if (customReady) return;
+  customReady = true;
+  buildSliders();
+  renderScenarios();
 }
 
 // ── 전략 탭 ──────────────────────────────────────────────────────────────────

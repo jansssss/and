@@ -12,7 +12,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
 import dash
-from dash import dcc, html, Input, Output, dash_table
+from dash import dcc, html, Input, Output, State, dash_table, ctx
 import dash_bootstrap_components as DBC
 
 # ─── 데이터 로드 ──────────────────────────────────────────────────────────────
@@ -87,6 +87,16 @@ PORTFOLIOS = {
         },
         'reason': 'AI·반도체·우주항공 등 고성장 섹터 집중. 단기 변동성은 크나 15년 장기에서 최고 기대수익. 시장 하락 시 20% TDF가 쿠션 역할'
     }
+}
+
+# ─── 자산별 기대 수익률 ────────────────────────────────────────────────────────
+ASSET_RATES = {
+    '예금/원리금보장': {'rate': 4.5,  'color': '#6c757d', 'id': 'sl-deposit'},
+    'K200 인덱스':    {'rate': 12.0, 'color': '#00d4aa', 'id': 'sl-k200'},
+    '글로벌주식(MSCI)':{'rate': 11.0, 'color': '#4dabf7', 'id': 'sl-global'},
+    'IT/AI 테마주':   {'rate': 18.0, 'color': '#e94560', 'id': 'sl-itai'},
+    'TDF 2040 혼합':  {'rate': 10.0, 'color': '#ffd43b', 'id': 'sl-tdf'},
+    '채권/보수형':    {'rate': 6.5,  'color': '#cc99ff', 'id': 'sl-bond'},
 }
 
 # ─── 추천 펀드 목록 ────────────────────────────────────────────────────────────
@@ -229,10 +239,16 @@ app.layout = html.Div(style={'backgroundColor': COLORS['bg'], 'minHeight': '100v
             dcc.Tab(label='🎯 전략 가이드', value='tab-strategy',
                     style={'backgroundColor': COLORS['accent'], 'color': COLORS['muted'], 'border': 'none', 'padding': '12px 20px'},
                     selected_style={'backgroundColor': COLORS['gold'], 'color': 'white', 'fontWeight': '700', 'border': 'none', 'padding': '12px 20px'}),
+            dcc.Tab(label='🎛️ 커스텀 시뮬레이터', value='tab-custom',
+                    style={'backgroundColor': COLORS['accent'], 'color': COLORS['muted'], 'border': 'none', 'padding': '12px 20px'},
+                    selected_style={'backgroundColor': '#7c4dff', 'color': 'white', 'fontWeight': '700', 'border': 'none', 'padding': '12px 20px'}),
         ]),
 
         html.Div(id='tab-content'),
-    ])
+    ]),
+
+    # 시나리오 저장소 (최대 3개)
+    dcc.Store(id='scenario-store', data=[None, None, None]),
 ])
 
 # ─── 탭 콘텐츠 콜백 ────────────────────────────────────────────────────────────
@@ -246,6 +262,8 @@ def render_tab(tab):
         return render_funds()
     elif tab == 'tab-strategy':
         return render_strategy()
+    elif tab == 'tab-custom':
+        return render_custom()
     return html.Div()
 
 # ─── 탭 1: 수익률 시뮬레이션 ─────────────────────────────────────────────────
@@ -711,6 +729,293 @@ def render_strategy():
                    style={'color': COLORS['muted'], 'fontSize': '13px', 'margin': 0})
         ])
     ])
+
+# ─── 탭 5: 커스텀 시뮬레이터 ────────────────────────────────────────────────────
+def _slider_row(name, info, default):
+    """슬라이더 행 하나 반환"""
+    return html.Div(style={'marginBottom': '18px'}, children=[
+        html.Div(style={'display': 'flex', 'justifyContent': 'space-between', 'marginBottom': '6px'}, children=[
+            html.Span(name, style={'color': COLORS['text'], 'fontWeight': '600', 'fontSize': '14px'}),
+            html.Div(style={'display': 'flex', 'alignItems': 'center', 'gap': '12px'}, children=[
+                html.Span(f"기대 {info['rate']}%/년",
+                          style={'color': info['color'], 'fontSize': '12px', 'backgroundColor': COLORS['bg'],
+                                 'padding': '2px 8px', 'borderRadius': '4px'}),
+                html.Span(id=f"{info['id']}-val", children=f"{default}%",
+                          style={'color': COLORS['yellow'], 'fontWeight': '700', 'minWidth': '42px', 'textAlign': 'right'}),
+            ]),
+        ]),
+        dcc.Slider(
+            id=info['id'], min=0, max=100, step=5, value=default,
+            marks={0: '0', 25: '25', 50: '50', 75: '75', 100: '100%'},
+            tooltip={"placement": "bottom", "always_visible": False},
+        ),
+    ])
+
+def render_custom():
+    # 기본값: 예금 70%, 균형형 30% 안에서 배분
+    defaults = {'sl-deposit': 70, 'sl-k200': 10, 'sl-global': 10, 'sl-itai': 5, 'sl-tdf': 5, 'sl-bond': 0}
+
+    sliders = [_slider_row(name, info, defaults[info['id']])
+               for name, info in ASSET_RATES.items()]
+
+    scenario_btns = html.Div(style={'display': 'flex', 'gap': '10px', 'marginTop': '16px', 'flexWrap': 'wrap'}, children=[
+        html.Button(f'시나리오 {i+1} 저장', id=f'save-sc-{i+1}',
+                    style={'backgroundColor': c, 'color': 'white', 'border': 'none',
+                           'borderRadius': '6px', 'padding': '8px 16px', 'cursor': 'pointer', 'fontFamily': 'inherit'})
+        for i, c in enumerate(['#e94560', '#00d4aa', '#4dabf7'])
+    ] + [
+        html.Button('전체 초기화', id='reset-sc',
+                    style={'backgroundColor': COLORS['accent'], 'color': COLORS['muted'], 'border': 'none',
+                           'borderRadius': '6px', 'padding': '8px 16px', 'cursor': 'pointer', 'fontFamily': 'inherit'})
+    ])
+
+    return html.Div([
+        html.Div(style={'display': 'grid', 'gridTemplateColumns': '380px 1fr', 'gap': '20px', 'marginBottom': '20px'}, children=[
+
+            # ── 슬라이더 패널 ──
+            html.Div(style=CARD_STYLE, children=[
+                html.H5('자산 비율 설정', style={'color': '#cc99ff', 'marginBottom': '6px'}),
+                html.P('슬라이더로 각 자산 비중을 조절하세요 (합계 100% 권장)',
+                       style={'color': COLORS['muted'], 'fontSize': '12px', 'marginBottom': '18px'}),
+                *sliders,
+                html.Hr(style={'borderColor': COLORS['accent'], 'margin': '16px 0'}),
+                html.Div(style={'display': 'flex', 'justifyContent': 'space-between', 'alignItems': 'center'}, children=[
+                    html.Span('합계', style={'color': COLORS['muted'], 'fontWeight': '600'}),
+                    html.Span(id='sl-total', children='100%',
+                              style={'fontSize': '20px', 'fontWeight': '800', 'color': COLORS['green']}),
+                ]),
+                html.Div(id='sl-warn', style={'marginTop': '6px'}),
+                html.Div(id='sl-rate-display', style={'marginTop': '10px'}),
+                scenario_btns,
+            ]),
+
+            # ── 시뮬레이션 차트 ──
+            html.Div(style={**CARD_STYLE, 'padding': '14px'}, children=[
+                dcc.Graph(id='custom-sim-chart'),
+            ]),
+        ]),
+
+        # ── 시나리오 비교 ──
+        html.Div(style=CARD_STYLE, children=[
+            html.H5('시나리오 비교 (최대 3개)', style={'color': '#cc99ff', 'marginBottom': '14px'}),
+            html.Div(id='scenario-summary', style={'marginBottom': '16px'}),
+            dcc.Graph(id='scenario-compare-chart'),
+        ]),
+    ])
+
+
+# ─── 커스텀 시뮬레이터 콜백들 ───────────────────────────────────────────────────
+_slider_ids = [info['id'] for info in ASSET_RATES.values()]
+_slider_names = list(ASSET_RATES.keys())
+_slider_inputs = [Input(sid, 'value') for sid in _slider_ids]
+
+@app.callback(
+    Output('sl-total', 'children'),
+    Output('sl-total', 'style'),
+    Output('sl-warn', 'children'),
+    Output('sl-rate-display', 'children'),
+    *[Output(f"{info['id']}-val", 'children') for info in ASSET_RATES.values()],
+    Output('custom-sim-chart', 'figure'),
+    _slider_inputs,
+)
+def update_custom_sim(*vals):
+    annual = USER['company_annual'] + USER['personal_annual']
+    total = sum(v or 0 for v in vals)
+
+    # 합계 표시 스타일
+    total_color = COLORS['green'] if total == 100 else ('#e94560' if total > 100 else COLORS['yellow'])
+    total_style = {'fontSize': '20px', 'fontWeight': '800', 'color': total_color}
+    warn = ''
+    if total > 100:
+        warn = html.P(f'⚠ 합계가 {total}%입니다. 100%를 초과했습니다.', style={'color': '#e94560', 'fontSize': '12px', 'margin': 0})
+    elif total < 100:
+        warn = html.P(f'ℹ 합계 {total}%. 나머지 {100-total}%는 예금으로 자동 배분됩니다.',
+                      style={'color': COLORS['yellow'], 'fontSize': '12px', 'margin': 0})
+
+    # 가중평균 수익률 계산 (정규화)
+    effective_total = total if total > 0 else 1
+    rates = [info['rate'] for info in ASSET_RATES.values()]
+    weighted_rate = sum((v or 0) * r for v, r in zip(vals, rates)) / effective_total
+
+    rate_display = html.Div([
+        html.Span('가중평균 기대수익률: ', style={'color': COLORS['muted'], 'fontSize': '13px'}),
+        html.Span(f'{weighted_rate:.2f}%/년', style={'color': '#cc99ff', 'fontWeight': '800', 'fontSize': '16px'}),
+    ])
+
+    # 슬라이더 값 레이블
+    val_labels = [f'{v or 0}%' for v in vals]
+
+    # 시뮬레이션 차트
+    years_list = list(range(0, 16))
+    fig = go.Figure()
+
+    # 현재 커스텀 포트폴리오
+    custom_vals = simulate_returns(USER['current'], annual, 15, weighted_rate)
+    fig.add_trace(go.Scatter(
+        x=years_list, y=custom_vals,
+        name=f'내 설정 ({weighted_rate:.1f}%/년)',
+        line=dict(color='#cc99ff', width=4),
+        mode='lines+markers', marker=dict(size=6),
+        hovertemplate='<b>내 설정</b><br>%{x}년 후: %{y:,.0f}만원<extra></extra>'
+    ))
+
+    # 예금 100% 비교선
+    dep_vals = simulate_returns(USER['current'], annual, 15, 4.5)
+    fig.add_trace(go.Scatter(
+        x=years_list, y=dep_vals,
+        name='예금 100% (4.5%)',
+        line=dict(color=COLORS['muted'], width=2, dash='dot'),
+        hovertemplate='<b>예금 100%</b><br>%{x}년 후: %{y:,.0f}만원<extra></extra>'
+    ))
+
+    # 각 자산별 단독 수익선 (참고용, 반투명)
+    for name, info, v in zip(_slider_names, ASSET_RATES.values(), vals):
+        if (v or 0) > 0:
+            solo_vals = simulate_returns(USER['current'], annual, 15, info['rate'])
+            fig.add_trace(go.Scatter(
+                x=years_list, y=solo_vals,
+                name=f'{name} 단독 ({info["rate"]}%)',
+                line=dict(color=info['color'], width=1, dash='dash'),
+                opacity=0.4, visible='legendonly',
+                hovertemplate=f'<b>{name}</b><br>%{{x}}년: %{{y:,.0f}}만원<extra></extra>'
+            ))
+
+    final_custom = custom_vals[-1]
+    final_dep = dep_vals[-1]
+    diff = final_custom - final_dep
+
+    fig.update_layout(
+        paper_bgcolor=COLORS['card_bg'], plot_bgcolor=COLORS['card_bg'],
+        font=dict(color=COLORS['text'], family='Noto Sans KR'),
+        title=dict(
+            text=f'15년 후 예상: {final_custom:,.0f}만원 (예금 대비 {diff:+,.0f}만원)',
+            font=dict(size=15, color='#cc99ff')
+        ),
+        xaxis=dict(title='경과 연수', gridcolor=COLORS['accent'], ticksuffix='년'),
+        yaxis=dict(title='적립금 (만원)', gridcolor=COLORS['accent'], tickformat=',.0f', ticksuffix='만'),
+        legend=dict(bgcolor=COLORS['bg'], bordercolor=COLORS['accent'], borderwidth=1),
+        hovermode='x unified', height=460,
+        margin=dict(t=60, r=20, b=50, l=80),
+    )
+
+    return (f'{total}%', total_style, warn, rate_display, *val_labels, fig)
+
+
+@app.callback(
+    Output('scenario-store', 'data'),
+    Input('save-sc-1', 'n_clicks'),
+    Input('save-sc-2', 'n_clicks'),
+    Input('save-sc-3', 'n_clicks'),
+    Input('reset-sc', 'n_clicks'),
+    State('scenario-store', 'data'),
+    *[State(sid, 'value') for sid in _slider_ids],
+    prevent_initial_call=True,
+)
+def save_scenario(_s1, _s2, _s3, _reset, store, *slider_vals):
+    triggered = ctx.triggered_id
+    if triggered == 'reset-sc':
+        return [None, None, None]
+
+    slot = {'save-sc-1': 0, 'save-sc-2': 1, 'save-sc-3': 2}.get(triggered)
+    if slot is None:
+        return store
+
+    rates = [info['rate'] for info in ASSET_RATES.values()]
+    total = sum(v or 0 for v in slider_vals)
+    effective = total if total > 0 else 1
+    weighted = sum((v or 0) * r for v, r in zip(slider_vals, rates)) / effective
+
+    scenario = {
+        'alloc': {name: (v or 0) for name, v in zip(_slider_names, slider_vals)},
+        'rate': round(weighted, 2),
+        'total': total,
+        'label': f'시나리오 {slot+1}',
+    }
+    new_store = list(store)
+    new_store[slot] = scenario
+    return new_store
+
+
+@app.callback(
+    Output('scenario-summary', 'children'),
+    Output('scenario-compare-chart', 'figure'),
+    Input('scenario-store', 'data'),
+)
+def update_scenario_compare(store):
+    annual = USER['company_annual'] + USER['personal_annual']
+    years_list = list(range(0, 16))
+    sc_colors = ['#e94560', '#00d4aa', '#4dabf7']
+
+    # 요약 카드
+    cards = []
+    for i, (sc, color) in enumerate(zip(store, sc_colors)):
+        if sc:
+            alloc_text = ' / '.join(f"{k} {v}%" for k, v in sc['alloc'].items() if v > 0)
+            final = simulate_returns(USER['current'], annual, 15, sc['rate'])[-1]
+            cards.append(html.Div(style={
+                **CARD_STYLE, 'borderLeft': f'3px solid {color}',
+                'marginBottom': 0, 'padding': '14px'
+            }, children=[
+                html.Div(style={'display': 'flex', 'justifyContent': 'space-between'}, children=[
+                    html.Span(sc['label'], style={'color': color, 'fontWeight': '700'}),
+                    html.Span(f"{sc['rate']}%/년", style={'color': color, 'fontSize': '18px', 'fontWeight': '800'}),
+                ]),
+                html.P(alloc_text, style={'color': COLORS['muted'], 'fontSize': '12px', 'margin': '4px 0'}),
+                html.Span(f'15년 후: {final:,.0f}만원', style={'color': COLORS['text'], 'fontWeight': '600'}),
+            ]))
+        else:
+            cards.append(html.Div(style={**CARD_STYLE, 'borderLeft': f'3px solid {COLORS["accent"]}',
+                                         'marginBottom': 0, 'padding': '14px', 'textAlign': 'center'}, children=[
+                html.P(f'시나리오 {i+1}', style={'color': COLORS['muted'], 'margin': '0 0 4px 0'}),
+                html.P('저장된 시나리오 없음', style={'color': COLORS['accent'], 'fontSize': '13px', 'margin': 0}),
+            ]))
+
+    summary = html.Div(style={'display': 'grid', 'gridTemplateColumns': 'repeat(3, 1fr)', 'gap': '14px'},
+                       children=cards)
+
+    # 비교 차트
+    fig = go.Figure()
+
+    # 예금 기준선
+    dep_vals = simulate_returns(USER['current'], annual, 15, 4.5)
+    fig.add_trace(go.Scatter(
+        x=years_list, y=dep_vals, name='예금 100% (기준)',
+        line=dict(color=COLORS['muted'], width=2, dash='dot'),
+    ))
+
+    saved_count = 0
+    for sc, color in zip(store, sc_colors):
+        if sc:
+            saved_count += 1
+            sc_vals = simulate_returns(USER['current'], annual, 15, sc['rate'])
+            fig.add_trace(go.Scatter(
+                x=years_list, y=sc_vals,
+                name=f"{sc['label']} ({sc['rate']}%/년)",
+                line=dict(color=color, width=3),
+                mode='lines+markers', marker=dict(size=6),
+                hovertemplate=f"<b>{sc['label']}</b><br>%{{x}}년 후: %{{y:,.0f}}만원<extra></extra>"
+            ))
+
+    if saved_count == 0:
+        fig.add_annotation(
+            text='슬라이더로 설정 후 [시나리오 저장] 버튼을 눌러 비교하세요',
+            xref='paper', yref='paper', x=0.5, y=0.5, showarrow=False,
+            font=dict(size=15, color=COLORS['muted'])
+        )
+
+    fig.update_layout(
+        paper_bgcolor=COLORS['card_bg'], plot_bgcolor=COLORS['card_bg'],
+        font=dict(color=COLORS['text'], family='Noto Sans KR'),
+        title=dict(text='시나리오별 15년 자산 성장 비교', font=dict(size=15, color='#cc99ff')),
+        xaxis=dict(title='경과 연수', gridcolor=COLORS['accent'], ticksuffix='년'),
+        yaxis=dict(title='적립금 (만원)', gridcolor=COLORS['accent'], tickformat=',.0f', ticksuffix='만'),
+        legend=dict(bgcolor=COLORS['bg']),
+        hovermode='x unified', height=420,
+        margin=dict(t=50, r=20, b=50, l=80),
+    )
+
+    return summary, fig
+
 
 # ─── 실행 ──────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
