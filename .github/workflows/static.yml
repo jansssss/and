@@ -34,19 +34,21 @@ jobs:
         run: npm install -g staticrypt
 
       - name: Encrypt index.html with AES-256
+        env:
+          STATICRYPT_PASSWORD: ${{ secrets.SITE_PASSWORD }}
         run: |
           staticrypt index.html \
-            --password "$SITE_PASSWORD" \
-            --output . \
+            -d encrypted \
             --remember 7 \
             --template-title "퇴직연금 분석 대시보드" \
             --template-instructions "접근 권한이 필요합니다. 비밀번호를 입력하세요." \
             --template-color-primary "#e94560" \
             --template-color-secondary "#1a1a2e"
-          echo "=== Encryption check ==="
-          head -3 index.html
-        env:
-          SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
+          echo "=== Encrypted files ==="
+          ls encrypted/
+          mv encrypted/index.html index.html
+          echo "=== First 5 lines of encrypted index.html ==="
+          head -5 index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
