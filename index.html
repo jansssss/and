@@ -23,7 +23,7 @@
   .badge { background: #e94560; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
 
   /* TABS */
-  .tabs { display: flex; gap: 4px; padding: 20px 40px 0; background: #1a1a2e; border-bottom: 1px solid #0f3460; }
+  .tabs { display: flex; gap: 4px; padding: 20px 40px 0; background: #1a1a2e; border-bottom: 1px solid #0f3460; flex-wrap: wrap; }
   .tab-btn {
     padding: 10px 22px; border: none; border-radius: 8px 8px 0 0;
     background: #0f3460; color: #a0a0b0; cursor: pointer; font-size: 14px;
@@ -146,6 +146,39 @@
   .disclaimer { background: #1a2a1a; border: 1px solid #00d4aa; border-radius: 10px; padding: 14px 18px; margin-top: 20px; }
   .disclaimer p { color: #a0a0b0; font-size: 13px; }
 
+  /* ── 운용 현황 탭 전용 ── */
+  /* 진행 바 */
+  .progress-bar-wrap { background: #0f3460; border-radius: 6px; height: 10px; margin-top: 8px; }
+  .progress-bar-fill { height: 10px; border-radius: 6px; background: linear-gradient(90deg, #00d4aa, #4dabf7); transition: width .6s; }
+
+  /* 타임라인 */
+  .timeline { display: flex; flex-direction: column; padding-left: 10px; }
+  .tl-item { display: flex; gap: 16px; padding: 14px 0 14px 24px; border-left: 2px solid #0f3460; position: relative; }
+  .tl-item:last-child { border-left-color: transparent; }
+  .tl-dot { width: 16px; height: 16px; border-radius: 50%; position: absolute; left: -9px; top: 17px; flex-shrink: 0; }
+  .tl-dot.done  { background: #00d4aa; box-shadow: 0 0 8px #00d4aa55; }
+  .tl-dot.next  { background: #1a1a2e; border: 2px solid #ffd43b; }
+  .tl-dot.later { background: #1a1a2e; border: 2px solid #0f3460; }
+  .tl-title  { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .tl-detail { color: #a0a0b0; font-size: 13px; margin-bottom: 4px; }
+  .tl-amount { font-size: 12px; color: #4dabf7; }
+
+  /* 체크리스트 */
+  .checklist { display: flex; flex-direction: column; gap: 12px; }
+  .check-item { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; color: #eaeaea; font-size: 14px; line-height: 1.4; }
+  .check-item input[type=checkbox] { margin-top: 2px; accent-color: #00d4aa; width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+
+  /* 어드바이스 */
+  .advice-list { display: flex; flex-direction: column; gap: 12px; }
+  .advice-item { border-left: 3px solid; padding: 10px 14px; background: #0f3460; border-radius: 0 8px 8px 0; }
+  .advice-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .advice-body  { color: #a0a0b0; font-size: 13px; line-height: 1.5; }
+
+  /* 연말 예측 숫자 */
+  .forecast-box { background: #0f3460; border-radius: 8px; padding: 14px 18px; }
+  .forecast-box .f-label { color: #a0a0b0; font-size: 12px; margin-bottom: 6px; }
+  .forecast-box .f-value { font-size: 22px; font-weight: 800; }
+
   @media (max-width: 900px) {
     .metrics { grid-template-columns: repeat(2, 1fr); }
     .grid-2, .grid-2-eq, .grid-4 { grid-template-columns: 1fr; }
@@ -161,7 +194,7 @@
 <div class="header">
   <div>
     <h1>&#127970; 퇴직연금 펀드 분석 대시보드</h1>
-    <p>과학기술공제회 | BlackRock 운용 전략 기반 포트폴리오 추천</p>
+    <p>과학기술공제회 | 분할 리빌딩 전략 운용 현황</p>
   </div>
   <div class="header-right">
     <span>&#128197; 2026.03.10 기준</span><br>
@@ -171,7 +204,8 @@
 
 <!-- TABS -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="showTab('sim')">&#128176; 수익률 시뮬레이션</button>
+  <button class="tab-btn active" onclick="showTab('status')">&#128200; 운용 현황</button>
+  <button class="tab-btn" onclick="showTab('sim')">&#128176; 수익률 시뮬레이션</button>
   <button class="tab-btn" onclick="showTab('port')">&#128202; 포트폴리오 추천</button>
   <button class="tab-btn" onclick="showTab('funds')">&#128269; 펀드 탐색기</button>
   <button class="tab-btn" onclick="showTab('strat')">&#127919; 전략 가이드</button>
@@ -180,145 +214,274 @@
 
 <div class="content">
 
-  <!-- 현황 요약 -->
-  <div class="metrics">
+<!-- ═══ TAB: 운용 현황 ═══ -->
+<div id="tab-status" class="tab-panel active">
+
+  <!-- 핵심 지표 -->
+  <div class="metrics" style="grid-template-columns:repeat(4,1fr)">
+    <div class="metric-card">
+      <div class="label">현재 적립금</div>
+      <div class="value" style="color:#00d4aa">3,379만원</div>
+      <div class="sub">2026-03-10 기준</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">리빌딩 진행</div>
+      <div class="value" style="color:#4dabf7">1 / 3차</div>
+      <div class="sub">2026-03-10 1차 완료</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">다음 실행 예정일</div>
+      <div class="value" style="color:#ffd43b">2026-04-10</div>
+      <div class="sub">2차 · 매수 전 진단 필수</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">목표 완료 후 기대수익률</div>
+      <div class="value" style="color:#e94560">5.2%/년</div>
+      <div class="sub">보수적 4.8% ~ 낙관 6.3%</div>
+    </div>
+  </div>
+
+  <!-- 리빌딩 진행률 -->
+  <div class="card" style="padding:16px 20px;margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-weight:700;font-size:14px">&#127381; 운용형 전환 진행률 (목표 30%)</span>
+      <span style="color:#4dabf7;font-weight:700">10% / 30% 완료</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:33.3%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:12px;color:#a0a0b0">
+      <span>1차 완료 ✅</span><span>2차 예정 04-10 🔜</span><span>3차 예정 05-10 🔜</span>
+    </div>
+  </div>
+
+  <!-- 실행 계획 타임라인 + 포트폴리오 도넛 -->
+  <div class="grid-2-eq">
+    <!-- 타임라인 -->
+    <div class="card">
+      <h5>&#128197; 분할 리빌딩 실행 계획</h5>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot done"></div>
+          <div>
+            <div class="tl-title" style="color:#00d4aa">&#9989; 1차 실행 완료 — 2026-03-10</div>
+            <div class="tl-detail">MSCI AC World 7% + 필라델피아반도체 3%</div>
+            <div class="tl-amount">이동금액: 3,378,721원 (전체의 10%)</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot next"></div>
+          <div>
+            <div class="tl-title" style="color:#ffd43b">&#128282; 2차 실행 예정 — 2026-04-10</div>
+            <div class="tl-detail">MSCI AC World 5% + 필라델피아반도체 3% + KOSPI200 2%</div>
+            <div class="tl-amount">예정금액: 3,378,721원 · <span style="color:#ffd43b">매수 전 진단 필수</span></div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot later"></div>
+          <div>
+            <div class="tl-title" style="color:#a0a0b0">&#128336; 3차 실행 예정 — 2026-05-10</div>
+            <div class="tl-detail">필라델피아반도체 4% + KOSPI200 3% + MSCI AC World 3%</div>
+            <div class="tl-amount">예정금액: 3,378,721원 · <span style="color:#a0a0b0">2차 이후 재진단</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 포트폴리오 도넛 -->
+    <div class="card" style="padding:14px">
+      <div id="plot-current-alloc"></div>
+    </div>
+  </div>
+
+  <!-- 목표 포트폴리오 + 연말 예측 -->
+  <div class="grid-2-eq">
+    <div class="card" style="padding:14px">
+      <div id="plot-target-alloc"></div>
+    </div>
+    <div class="card">
+      <h5>&#128200; 2026년 말 적립금 예측</h5>
+      <div id="plot-forecast" style="margin:-8px -8px 12px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="forecast-box">
+          <div class="f-label">예금 100% 유지 시</div>
+          <div class="f-value" style="color:#6c757d" id="fc-deposit">—</div>
+        </div>
+        <div class="forecast-box">
+          <div class="f-label">계획 완료 시 (5.2%/년)</div>
+          <div class="f-value" style="color:#00d4aa" id="fc-plan">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 체크리스트 + 어드바이스 -->
+  <div class="grid-2-eq">
+    <div class="card">
+      <h5>&#9989; 2차 실행 전 체크리스트</h5>
+      <div class="checklist">
+        <label class="check-item"><input type="checkbox"> 예금형 4.5% 금리 유지 여부 확인</label>
+        <label class="check-item"><input type="checkbox"> 미국 대형주 / 반도체 / KOSPI 최근 흐름 확인</label>
+        <label class="check-item"><input type="checkbox"> 지정학 리스크 (전쟁, 유가, 환율) 점검</label>
+        <label class="check-item"><input type="checkbox"> 해당 펀드 판매 지속 여부 / 총보수 변경 확인</label>
+        <label class="check-item"><input type="checkbox"> 이상 없으면 계획대로 진행</label>
+      </div>
+    </div>
+    <div class="card">
+      <h5>&#128161; 개인 어드바이스</h5>
+      <div class="advice-list">
+        <div class="advice-item" style="border-left-color:#00d4aa">
+          <div class="advice-title">코어 70% 예금은 손대지 않는다</div>
+          <div class="advice-body">예금형 4.5% 복리가 전체 수익의 기반. 주식 변동에 흔들려 코어를 줄이면 전략 붕괴.</div>
+        </div>
+        <div class="advice-item" style="border-left-color:#4dabf7">
+          <div class="advice-title">급락해도 계획대로 — 오히려 기회</div>
+          <div class="advice-body">10~15% 급락 시 MSCI AC World 같은 코어형 우선 매수. 테마 비중 확대 금지.</div>
+        </div>
+        <div class="advice-item" style="border-left-color:#ffd43b">
+          <div class="advice-title">감정보다 진단이 먼저다</div>
+          <div class="advice-body">매수 충동이 생겨도 금리·시장·지정학·상품 4가지 진단 후 진행. 충동 매수 금지.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ TAB: 시뮬레이션 ═══ -->
+<div id="tab-sim" class="tab-panel">
+  <div class="metrics" style="grid-template-columns:repeat(5,1fr)">
     <div class="metric-card"><div class="label">현재 적립금</div><div class="value" style="color:#00d4aa">3,800만원</div><div class="sub">총 불입금액</div></div>
     <div class="metric-card"><div class="label">연간 불입</div><div class="value" style="color:#4dabf7">900만원</div><div class="sub">회사 500 + 본인 400</div></div>
     <div class="metric-card"><div class="label">정년까지</div><div class="value" style="color:#ffd43b">15년</div><div class="sub">장기 투자 가능</div></div>
     <div class="metric-card"><div class="label">현재 수익률</div><div class="value" style="color:#a0a0b0">4.5%/년</div><div class="sub">예금 100% 운용 중</div></div>
     <div class="metric-card"><div class="label">예상 총 불입</div><div class="value" style="color:#e94560">1.35억</div><div class="sub">현재 + 15년×900만</div></div>
   </div>
-
-  <!-- ═══ TAB: 시뮬레이션 ═══ -->
-  <div id="tab-sim" class="tab-panel active">
-    <div class="metrics" style="grid-template-columns:repeat(4,1fr)">
-      <div class="metric-card"><div class="label">예금 100% 유지시</div><div class="value" style="color:#a0a0b0" id="v-deposit">-</div><div class="sub">15년 후 수령액</div></div>
-      <div class="metric-card"><div class="label">균형형 포트폴리오</div><div class="value" style="color:#4dabf7" id="v-balanced">-</div><div class="sub">15년 후 수령액</div></div>
-      <div class="metric-card"><div class="label">추가 기대 수익</div><div class="value" style="color:#00d4aa" id="v-diff">-</div><div class="sub">예금 대비 초과수익</div></div>
-      <div class="metric-card"><div class="label">총 불입 원금</div><div class="value" style="color:#ffd43b">13,500만원</div><div class="sub">현재금 + 15년×900만</div></div>
-    </div>
-    <div class="grid-2">
-      <div class="card" style="padding:14px"><div id="plot-line"></div></div>
-      <div class="card" style="padding:14px"><div id="plot-bar"></div></div>
-    </div>
-    <div class="card">
-      <h5>&#128203; 포트폴리오별 연도별 적립금</h5>
-      <div style="overflow-x:auto"><table class="sim-table" id="sim-table"></table></div>
-    </div>
+  <div class="metrics" style="grid-template-columns:repeat(4,1fr)">
+    <div class="metric-card"><div class="label">예금 100% 유지시</div><div class="value" style="color:#a0a0b0" id="v-deposit">-</div><div class="sub">15년 후 수령액</div></div>
+    <div class="metric-card"><div class="label">균형형 포트폴리오</div><div class="value" style="color:#4dabf7" id="v-balanced">-</div><div class="sub">15년 후 수령액</div></div>
+    <div class="metric-card"><div class="label">추가 기대 수익</div><div class="value" style="color:#00d4aa" id="v-diff">-</div><div class="sub">예금 대비 초과수익</div></div>
+    <div class="metric-card"><div class="label">총 불입 원금</div><div class="value" style="color:#ffd43b">13,500만원</div><div class="sub">현재금 + 15년×900만</div></div>
   </div>
-
-  <!-- ═══ TAB: 포트폴리오 ═══ -->
-  <div id="tab-port" class="tab-panel">
-    <div class="grid-2-eq">
-      <div class="card" style="padding:14px"><div id="plot-pie"></div></div>
-      <div class="card" style="padding:14px"><div id="plot-radar"></div></div>
-    </div>
-    <div class="grid-4" id="port-cards"></div>
-    <div class="card">
-      <h5>&#127942; 카테고리별 추천 펀드</h5>
-      <div class="fund-tbl-wrap"><table class="fund-tbl" id="rec-table"></table></div>
-    </div>
+  <div class="grid-2">
+    <div class="card" style="padding:14px"><div id="plot-line"></div></div>
+    <div class="card" style="padding:14px"><div id="plot-bar"></div></div>
   </div>
+  <div class="card">
+    <h5>&#128203; 포트폴리오별 연도별 적립금</h5>
+    <div style="overflow-x:auto"><table class="sim-table" id="sim-table"></table></div>
+  </div>
+</div>
 
-  <!-- ═══ TAB: 펀드 탐색기 ═══ -->
-  <div id="tab-funds" class="tab-panel">
-    <div class="card">
-      <div id="fund-filter">
-        <div><label>대유형</label><br>
-          <select id="f-type" onchange="filterFunds()">
-            <option value="">전체</option>
-            <option>혼합</option><option>해외주식</option><option>국내주식</option><option>국내채권</option><option>해외채권</option>
-          </select>
-        </div>
-        <div><label>위험등급</label><br>
-          <select id="f-risk" onchange="filterFunds()">
-            <option value="">전체</option>
-            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
-          </select>
-        </div>
-        <div><label>1년수익 최소(%)</label><br>
-          <input type="number" id="f-ret" value="0" min="0" max="200" step="5" oninput="filterFunds()" style="width:90px">
-        </div>
-        <div><label>총보수 최대(%)</label><br>
-          <input type="number" id="f-cost" value="2.5" min="0.1" max="2.5" step="0.1" oninput="filterFunds()" style="width:90px">
-        </div>
-        <div><label>펀드명 검색</label><br>
-          <input type="text" id="f-name" placeholder="검색어..." oninput="filterFunds()" style="width:160px">
-        </div>
-        <div style="align-self:flex-end">
-          <span id="f-count" style="color:#ffd43b;font-size:13px"></span>
-        </div>
+<!-- ═══ TAB: 포트폴리오 ═══ -->
+<div id="tab-port" class="tab-panel">
+  <div class="grid-2-eq">
+    <div class="card" style="padding:14px"><div id="plot-pie"></div></div>
+    <div class="card" style="padding:14px"><div id="plot-radar"></div></div>
+  </div>
+  <div class="grid-4" id="port-cards"></div>
+  <div class="card">
+    <h5>&#127942; 카테고리별 추천 펀드</h5>
+    <div class="fund-tbl-wrap"><table class="fund-tbl" id="rec-table"></table></div>
+  </div>
+</div>
+
+<!-- ═══ TAB: 펀드 탐색기 ═══ -->
+<div id="tab-funds" class="tab-panel">
+  <div class="card">
+    <div id="fund-filter">
+      <div><label>대유형</label><br>
+        <select id="f-type" onchange="filterFunds()">
+          <option value="">전체</option>
+          <option>혼합</option><option>해외주식</option><option>국내주식</option><option>국내채권</option><option>해외채권</option>
+        </select>
+      </div>
+      <div><label>위험등급</label><br>
+        <select id="f-risk" onchange="filterFunds()">
+          <option value="">전체</option>
+          <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+        </select>
+      </div>
+      <div><label>1년수익 최소(%)</label><br>
+        <input type="number" id="f-ret" value="0" min="0" max="200" step="5" oninput="filterFunds()" style="width:90px">
+      </div>
+      <div><label>총보수 최대(%)</label><br>
+        <input type="number" id="f-cost" value="2.5" min="0.1" max="2.5" step="0.1" oninput="filterFunds()" style="width:90px">
+      </div>
+      <div><label>펀드명 검색</label><br>
+        <input type="text" id="f-name" placeholder="검색어..." oninput="filterFunds()" style="width:160px">
+      </div>
+      <div style="align-self:flex-end">
+        <span id="f-count" style="color:#ffd43b;font-size:13px"></span>
       </div>
     </div>
-    <div class="grid-2-eq">
-      <div class="card" style="padding:14px"><div id="plot-scatter"></div></div>
-      <div class="card" style="padding:14px"><div id="plot-violin"></div></div>
-    </div>
-    <div class="card">
-      <h5>&#128203; 펀드 목록</h5>
-      <div class="fund-tbl-wrap"><table class="fund-tbl" id="fund-table">
-        <thead><tr>
-          <th onclick="sortFunds('펀드명')">펀드명 &#8597;</th>
-          <th onclick="sortFunds('대유형')">대유형 &#8597;</th>
-          <th onclick="sortFunds('소유형')">소유형 &#8597;</th>
-          <th onclick="sortFunds('1년%')">1년(%) &#8597;</th>
-          <th onclick="sortFunds('3년%')">3년(%) &#8597;</th>
-          <th onclick="sortFunds('총보수%')">총보수 &#8597;</th>
-          <th onclick="sortFunds('샤프%tile')">샤프 &#8597;</th>
-          <th onclick="sortFunds('위험등급')">위험 &#8597;</th>
-          <th onclick="sortFunds('운용규모억')">규모(억) &#8597;</th>
-        </tr></thead>
-        <tbody id="fund-tbody"></tbody>
-      </table></div>
-      <div class="pagination" id="pagination"></div>
-    </div>
   </div>
+  <div class="grid-2-eq">
+    <div class="card" style="padding:14px"><div id="plot-scatter"></div></div>
+    <div class="card" style="padding:14px"><div id="plot-violin"></div></div>
+  </div>
+  <div class="card">
+    <h5>&#128203; 펀드 목록</h5>
+    <div class="fund-tbl-wrap"><table class="fund-tbl" id="fund-table">
+      <thead><tr>
+        <th onclick="sortFunds('펀드명')">펀드명 &#8597;</th>
+        <th onclick="sortFunds('대유형')">대유형 &#8597;</th>
+        <th onclick="sortFunds('소유형')">소유형 &#8597;</th>
+        <th onclick="sortFunds('1년%')">1년(%) &#8597;</th>
+        <th onclick="sortFunds('3년%')">3년(%) &#8597;</th>
+        <th onclick="sortFunds('총보수%')">총보수 &#8597;</th>
+        <th onclick="sortFunds('샤프%tile')">샤프 &#8597;</th>
+        <th onclick="sortFunds('위험등급')">위험 &#8597;</th>
+        <th onclick="sortFunds('운용규모억')">규모(억) &#8597;</th>
+      </tr></thead>
+      <tbody id="fund-tbody"></tbody>
+    </table></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+</div>
 
-  <!-- ═══ TAB: 커스텀 시뮬레이터 ═══ -->
-  <div id="tab-custom" class="tab-panel">
-    <div class="custom-grid">
-      <!-- 슬라이더 패널 -->
-      <div class="card">
-        <h5 style="color:#cc99ff;margin-bottom:6px">&#127897;&#65039; 자산 비율 설정</h5>
-        <p style="color:#a0a0b0;font-size:12px;margin-bottom:18px">슬라이더로 각 자산 비중을 조절하세요 (합계 100% 권장)</p>
-        <div id="sliders-container"></div>
-        <div class="total-row">
-          <span class="total-label">합계</span>
-          <span class="total-val" id="sl-total">100%</span>
-        </div>
-        <div class="warn-box" id="sl-warn"></div>
-        <div class="rate-display" id="sl-rate-display"></div>
-        <div class="sc-btns">
-          <button class="sc-btn" style="background:#e94560" onclick="saveScenario(0)">시나리오 1 저장</button>
-          <button class="sc-btn" style="background:#00d4aa;color:#000" onclick="saveScenario(1)">시나리오 2 저장</button>
-          <button class="sc-btn" style="background:#4dabf7;color:#000" onclick="saveScenario(2)">시나리오 3 저장</button>
-          <button class="sc-btn" style="background:#0f3460;color:#a0a0b0" onclick="resetScenarios()">초기화</button>
-        </div>
+<!-- ═══ TAB: 커스텀 시뮬레이터 ═══ -->
+<div id="tab-custom" class="tab-panel">
+  <div class="custom-grid">
+    <div class="card">
+      <h5 style="color:#cc99ff;margin-bottom:6px">&#127897;&#65039; 자산 비율 설정</h5>
+      <p style="color:#a0a0b0;font-size:12px;margin-bottom:18px">슬라이더로 각 자산 비중을 조절하세요 (합계 100% 권장)</p>
+      <div id="sliders-container"></div>
+      <div class="total-row">
+        <span class="total-label">합계</span>
+        <span class="total-val" id="sl-total">100%</span>
       </div>
-      <!-- 실시간 시뮬 차트 -->
-      <div class="card" style="padding:14px"><div id="custom-sim-chart"></div></div>
+      <div class="warn-box" id="sl-warn"></div>
+      <div class="rate-display" id="sl-rate-display"></div>
+      <div class="sc-btns">
+        <button class="sc-btn" style="background:#e94560" onclick="saveScenario(0)">시나리오 1 저장</button>
+        <button class="sc-btn" style="background:#00d4aa;color:#000" onclick="saveScenario(1)">시나리오 2 저장</button>
+        <button class="sc-btn" style="background:#4dabf7;color:#000" onclick="saveScenario(2)">시나리오 3 저장</button>
+        <button class="sc-btn" style="background:#0f3460;color:#a0a0b0" onclick="resetScenarios()">초기화</button>
+      </div>
     </div>
-    <!-- 시나리오 비교 -->
-    <div class="card">
-      <h5 style="color:#cc99ff;margin-bottom:14px">시나리오 비교 (최대 3개)</h5>
-      <div class="sc-cards" id="sc-cards"></div>
-      <div id="scenario-compare-chart"></div>
-    </div>
+    <div class="card" style="padding:14px"><div id="custom-sim-chart"></div></div>
   </div>
+  <div class="card">
+    <h5 style="color:#cc99ff;margin-bottom:14px">시나리오 비교 (최대 3개)</h5>
+    <div class="sc-cards" id="sc-cards"></div>
+    <div id="scenario-compare-chart"></div>
+  </div>
+</div>
 
-  <!-- ═══ TAB: 전략 ═══ -->
-  <div id="tab-strat" class="tab-panel">
-    <div class="grid-2">
-      <div class="card" style="padding:14px"><div id="plot-glide"></div></div>
-      <div class="card" style="padding:14px"><div id="plot-cost"></div></div>
-    </div>
-    <div class="grid-4" id="strat-cards"></div>
-    <div class="disclaimer">
-      <p>&#9888;&#65039; <strong>면책조항:</strong> 본 분석은 과거 수익률 기반의 참고용 정보입니다.
-      과거 수익률이 미래를 보장하지 않습니다. 실제 투자 결정 전 과학기술공제회 담당자 또는
-      공인 재무설계사와 상담하시기 바랍니다.</p>
-    </div>
+<!-- ═══ TAB: 전략 ═══ -->
+<div id="tab-strat" class="tab-panel">
+  <div class="grid-2">
+    <div class="card" style="padding:14px"><div id="plot-glide"></div></div>
+    <div class="card" style="padding:14px"><div id="plot-cost"></div></div>
   </div>
+  <div class="grid-4" id="strat-cards"></div>
+  <div class="disclaimer">
+    <p>&#9888;&#65039; <strong>면책조항:</strong> 본 분석은 과거 수익률 기반의 참고용 정보입니다.
+    과거 수익률이 미래를 보장하지 않습니다. 실제 투자 결정 전 과학기술공제회 담당자 또는
+    공인 재무설계사와 상담하시기 바랍니다.</p>
+  </div>
+</div>
 
 </div><!-- /content -->
 
@@ -350,6 +513,72 @@ const PORTFOLIOS = [
     alloc:{'IT/AI 테마':40, '글로벌성장주':40, 'TDF2045':20},
     reason:'AI·반도체·우주항공 고성장 섹터 집중. 단기 변동성 크나 15년 장기에서 최고 기대수익. 20% TDF가 하락 쿠션 역할' },
 ];
+
+// ── 운용 현황 탭 ──────────────────────────────────────────────────────────────
+(function initStatus() {
+  // 현재 포트폴리오 (1차 완료 후)
+  Plotly.newPlot('plot-current-alloc', [{
+    labels: ['예금형', 'MSCI AC World', '필라델피아반도체'],
+    values: [90, 7, 3],
+    type: 'pie', hole: 0.5,
+    marker: { colors: ['#4a5568', '#4dabf7', '#e94560'] },
+    textinfo: 'label+percent',
+    textfont: { size: 12, color: '#eaeaea' }
+  }], {
+    paper_bgcolor: '#16213e',
+    font: { color: '#eaeaea', family: 'Malgun Gothic' },
+    title: { text: '현재 포트폴리오 (1차 완료)', font: { size: 14, color: '#ffd43b' } },
+    height: 300, margin: { t: 50, r: 10, b: 10, l: 10 },
+    showlegend: true, legend: { bgcolor: '#16213e', orientation: 'h', y: -0.1 }
+  }, { responsive: true });
+
+  // 목표 포트폴리오
+  Plotly.newPlot('plot-target-alloc', [{
+    labels: ['예금형', 'MSCI AC World', '필라델피아반도체', 'KOSPI200'],
+    values: [70, 15, 10, 5],
+    type: 'pie', hole: 0.5,
+    marker: { colors: ['#4a5568', '#4dabf7', '#e94560', '#00d4aa'] },
+    textinfo: 'label+percent',
+    textfont: { size: 12, color: '#eaeaea' }
+  }], {
+    paper_bgcolor: '#16213e',
+    font: { color: '#eaeaea', family: 'Malgun Gothic' },
+    title: { text: '목표 포트폴리오 (3차 완료 후)', font: { size: 14, color: '#00d4aa' } },
+    height: 300, margin: { t: 50, r: 10, b: 10, l: 10 },
+    showlegend: true, legend: { bgcolor: '#16213e', orientation: 'h', y: -0.1 }
+  }, { responsive: true });
+
+  // 연말 예측 (월별, 3월~12월)
+  const months = ['3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+  const start = 3379; // 만원
+  const mc = 75; // 월 납입 (9000만원/년 ÷ 12)
+  const dep = [start], plan = [start];
+  for (let m = 1; m < 10; m++) {
+    dep.push(Math.round((dep[m-1] + mc) * (1 + 4.5/100/12)));
+    const r = m < 3 ? 4.8/100/12 : 5.2/100/12;
+    plan.push(Math.round((plan[m-1] + mc) * (1 + r)));
+  }
+
+  Plotly.newPlot('plot-forecast', [
+    { x: months, y: dep, name: '예금 100%', mode: 'lines+markers',
+      line: { color: '#6c757d', width: 2, dash: 'dot' }, marker: { size: 5 },
+      hovertemplate: '<b>예금 100%</b><br>%{x}: %{y:,}만원<extra></extra>' },
+    { x: months, y: plan, name: '계획 실행 (5.2%)', mode: 'lines+markers',
+      line: { color: '#00d4aa', width: 3 }, marker: { size: 6 },
+      hovertemplate: '<b>계획 실행</b><br>%{x}: %{y:,}만원<extra></extra>' }
+  ], {
+    paper_bgcolor: '#16213e', plot_bgcolor: '#16213e',
+    font: { color: '#eaeaea', family: 'Malgun Gothic' },
+    xaxis: { gridcolor: '#0f3460' },
+    yaxis: { gridcolor: '#0f3460', tickformat: ',', ticksuffix: '만' },
+    legend: { bgcolor: '#1a1a2e', orientation: 'h', y: -0.2 },
+    hovermode: 'x unified',
+    height: 240, margin: { t: 20, r: 10, b: 60, l: 70 }
+  }, { responsive: true });
+
+  document.getElementById('fc-deposit').textContent = dep[9].toLocaleString() + '만원';
+  document.getElementById('fc-plan').textContent    = plan[9].toLocaleString() + '만원';
+})();
 
 // ── 시뮬레이션 계산 ────────────────────────────────────────────────────────────
 function simulate(current, annual, years, rate) {
@@ -397,14 +626,12 @@ function fmt(v) { return v.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '�
     height:380, margin:{t:50,r:20,b:80,l:80}, showlegend:false
   }, {responsive:true});
 
-  // 요약 수치
   const dep = simulate(USER.current, USER.annual, 15, 4.5)[15];
   const bal = simulate(USER.current, USER.annual, 15, 11.5)[15];
   document.getElementById('v-deposit').textContent = fmt(dep);
   document.getElementById('v-balanced').textContent = fmt(bal);
   document.getElementById('v-diff').textContent = '+' + fmt(bal - dep);
 
-  // 시뮬 테이블
   const checkYears = [0,3,5,7,10,12,15];
   const tbl = document.getElementById('sim-table');
   let html = '<thead><tr><th>시점</th>' + PORTFOLIOS.map(p=>`<th>${p.name}</th>`).join('') + '</tr></thead><tbody>';
@@ -455,7 +682,6 @@ function fmt(v) { return v.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '�
     height:360, margin:{t:50,r:40,b:60,l:40}
   }, {responsive:true});
 
-  // 포트폴리오 카드
   const container = document.getElementById('port-cards');
   PORTFOLIOS.forEach(p => {
     const allocHtml = Object.entries(p.alloc).map(([k,v])=>`<li>${k}: ${v}%</li>`).join('');
@@ -474,7 +700,6 @@ function fmt(v) { return v.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '�
     </div>`;
   });
 
-  // 추천 펀드 테이블 (하드코딩 - 데이터 기반)
   const recFunds = [
     {cat:'K200 인덱스', name:'삼성퇴직연금KOSPI200증권자투자신탁 1[주식]_C', r1:147.29, r3:174.34, cost:0.590, sharpe:97, risk:2, reason:'저비용·고수익 국내 대형주 인덱스'},
     {cat:'K200 인덱스', name:'대신KOSPI200인덱스증권자투자신탁[주식]ClassC-P', r1:143.58, r3:178.74, cost:0.795, sharpe:92, risk:2, reason:'국내 대형주 분산, 3년 최상위'},
@@ -487,7 +712,7 @@ function fmt(v) { return v.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '�
     {cat:'IT/AI 테마', name:'미래에셋코어테크증권자투자신탁(주식)종류C-P2', r1:177.33, r3:151.86, cost:1.395, sharpe:67, risk:1, reason:'테크 1년 수익률 2위, 위험등급 1'},
   ];
   let rhtml = '<thead><tr><th>카테고리</th><th>펀드명</th><th>1년(%)</th><th>3년(%)</th><th>총보수(%)</th><th>샤프백분위</th><th>위험등급</th><th>추천이유</th></tr></thead><tbody>';
-  recFunds.forEach((f,i) => {
+  recFunds.forEach(f => {
     rhtml += `<tr>
       <td class="neu">${f.cat}</td>
       <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis" title="${f.name}">${f.name}</td>
@@ -510,15 +735,8 @@ let scatterReady = false;
 
 fetch('fund_data.json')
   .then(r => r.json())
-  .then(data => {
-    fundData = data;
-    filteredData = [...data];
-    renderFundTable();
-  })
-  .catch(() => {
-    // fallback: data embedded
-    console.warn('fund_data.json 로드 실패 - 샘플 데이터 표시');
-  });
+  .then(data => { fundData = data; filteredData = [...data]; renderFundTable(); })
+  .catch(() => { console.warn('fund_data.json 로드 실패 - 샘플 데이터 표시'); });
 
 function filterFunds() {
   const ftype = document.getElementById('f-type').value;
@@ -554,9 +772,8 @@ function sortFunds(col) {
 function renderFundTable() {
   document.getElementById('f-count').textContent = filteredData.length + '개 펀드';
   const start = (page-1)*PAGE_SIZE, end = start+PAGE_SIZE;
-  const rows = filteredData.slice(start, end);
   let html = '';
-  rows.forEach(f => {
+  filteredData.slice(start, end).forEach(f => {
     const r1 = typeof f['1년%']==='number' ? f['1년%'].toFixed(2) : '-';
     const r3 = typeof f['3년%']==='number' ? f['3년%'].toFixed(2) : '-';
     const c  = typeof f['총보수%']==='number' ? f['총보수%'].toFixed(3) : '-';
@@ -586,11 +803,7 @@ function renderPagination() {
 }
 function gotoPage(p) { page = p; renderFundTable(); }
 
-function buildFundCharts() {
-  scatterReady = true;
-  updateFundCharts();
-}
-
+function buildFundCharts() { scatterReady = true; updateFundCharts(); }
 function updateFundCharts() {
   const d = filteredData.filter(f => f['1년%'] != null && f['총보수%'] != null);
   const types = [...new Set(d.map(f=>f['대유형']))];
@@ -660,7 +873,6 @@ function buildSliders() {
 }
 
 function getSliderVals() { return ASSETS.map(a => parseInt(document.getElementById(a.id).value) || 0); }
-
 function getWeightedRate(vals) {
   const total = vals.reduce((s,v)=>s+v, 0);
   if (total === 0) return 4.5;
@@ -671,25 +883,16 @@ function onSliderChange() {
   const vals = getSliderVals();
   const total = vals.reduce((s,v)=>s+v,0);
   const rate  = getWeightedRate(vals);
-
-  // 각 슬라이더 레이블 업데이트
   ASSETS.forEach((a,i) => { document.getElementById(`${a.id}-val`).textContent = vals[i]+'%'; });
-
-  // 합계 색상
   const totalEl = document.getElementById('sl-total');
   totalEl.textContent = total + '%';
   totalEl.style.color = total===100 ? '#00d4aa' : total>100 ? '#e94560' : '#ffd43b';
-
-  // 경고
   const warn = document.getElementById('sl-warn');
   if (total > 100)      warn.innerHTML = `<span style="color:#e94560">⚠ 합계가 ${total}%입니다. 100%를 초과했습니다.</span>`;
   else if (total < 100) warn.innerHTML = `<span style="color:#ffd43b">ℹ 합계 ${total}%. 나머지 ${100-total}%는 예금으로 자동 배분됩니다.</span>`;
   else                   warn.innerHTML = `<span style="color:#00d4aa">✓ 합계 100%</span>`;
-
-  // 수익률 표시
   document.getElementById('sl-rate-display').innerHTML =
     `<span style="color:#a0a0b0">가중평균 기대수익률: </span><span style="color:#cc99ff;font-weight:800;font-size:16px">${rate.toFixed(2)}%/년</span>`;
-
   renderCustomChart(vals, rate);
 }
 
@@ -698,7 +901,6 @@ function renderCustomChart(vals, rate) {
   const customVals = simulate(3800, annual, 15, rate);
   const depVals    = simulate(3800, annual, 15, 4.5);
   const final = customVals[15], dep = depVals[15], diff = final - dep;
-
   const traces = [
     { x:yrs, y:customVals, name:`내 설정 (${rate.toFixed(1)}%/년)`,
       mode:'lines+markers', line:{color:'#cc99ff',width:4}, marker:{size:6},
@@ -707,8 +909,6 @@ function renderCustomChart(vals, rate) {
       mode:'lines', line:{color:'#6c757d',width:2,dash:'dot'},
       hovertemplate:'<b>예금 100%</b><br>%{x}년 후: %{y:,.0f}만원<extra></extra>' },
   ];
-
-  // 선택된 자산별 단독선 (범례 클릭으로 표시)
   ASSETS.forEach((a,i) => {
     if (vals[i] > 0) {
       traces.push({ x:yrs, y:simulate(3800,annual,15,a.rate),
@@ -716,7 +916,6 @@ function renderCustomChart(vals, rate) {
         line:{color:a.color,width:1,dash:'dash'}, opacity:0.5, visible:'legendonly' });
     }
   });
-
   Plotly.react('custom-sim-chart', traces, {
     paper_bgcolor:'#16213e', plot_bgcolor:'#16213e',
     font:{color:'#eaeaea',family:'Malgun Gothic'},
@@ -731,20 +930,15 @@ function renderCustomChart(vals, rate) {
 function saveScenario(slot) {
   const vals = getSliderVals();
   const rate = getWeightedRate(vals);
-  const total = vals.reduce((s,v)=>s+v,0);
   const final = simulate(3800, 900, 15, rate)[15];
   const alloc = ASSETS.map((a,i)=>vals[i]>0?`${a.name} ${vals[i]}%`:null).filter(Boolean).join(' / ');
-  scenarios[slot] = { rate, total, final, alloc, label:`시나리오 ${slot+1}` };
+  scenarios[slot] = { rate, final, alloc, label:`시나리오 ${slot+1}` };
   renderScenarios();
 }
 
-function resetScenarios() {
-  scenarios[0]=scenarios[1]=scenarios[2]=null;
-  renderScenarios();
-}
+function resetScenarios() { scenarios[0]=scenarios[1]=scenarios[2]=null; renderScenarios(); }
 
 function renderScenarios() {
-  // 카드
   const cardsEl = document.getElementById('sc-cards');
   cardsEl.innerHTML = '';
   scenarios.forEach((sc,i) => {
@@ -764,8 +958,6 @@ function renderScenarios() {
       </div>`;
     }
   });
-
-  // 비교 차트
   const yrs = Array.from({length:16},(_,i)=>i);
   const traces = [{
     x:yrs, y:simulate(3800,900,15,4.5), name:'예금 100% (기준)',
@@ -779,9 +971,8 @@ function renderScenarios() {
       hovertemplate:`<b>${sc.label}</b><br>%{x}년: %{y:,.0f}만원<extra></extra>`
     });
   });
-
   const hasData = scenarios.some(Boolean);
-  const layout = {
+  Plotly.react('scenario-compare-chart', traces, {
     paper_bgcolor:'#16213e', plot_bgcolor:'#16213e',
     font:{color:'#eaeaea',family:'Malgun Gothic'},
     title:{text:'시나리오별 15년 자산 성장 비교', font:{size:15,color:'#cc99ff'}},
@@ -794,11 +985,9 @@ function renderScenarios() {
       xref:'paper',yref:'paper',x:0.5,y:0.5,showarrow:false,
       font:{size:14,color:'#a0a0b0'}
     }]
-  };
-  Plotly.react('scenario-compare-chart', traces, layout, {responsive:true});
+  }, {responsive:true});
 }
 
-// 커스텀 탭 열릴 때 초기화
 let customReady = false;
 function initCustom() {
   if (customReady) return;
@@ -812,11 +1001,9 @@ let stratReady = false;
 function buildStratCharts() {
   stratReady = true;
   const yrs = Array.from({length:16},(_,i)=>i);
-  const equity = yrs.map(y => 80 - y*2);
-  const bond   = yrs.map(y => 20 + y*2);
   Plotly.newPlot('plot-glide', [
-    {x:yrs, y:equity, name:'주식 비율', fill:'tozeroy', fillcolor:'rgba(77,171,247,0.3)', line:{color:'#4dabf7',width:2}},
-    {x:yrs, y:bond,   name:'채권/안전자산', fill:'tozeroy', fillcolor:'rgba(0,212,170,0.3)', line:{color:'#00d4aa',width:2}}
+    {x:yrs, y:yrs.map(y=>80-y*2), name:'주식 비율', fill:'tozeroy', fillcolor:'rgba(77,171,247,0.3)', line:{color:'#4dabf7',width:2}},
+    {x:yrs, y:yrs.map(y=>20+y*2), name:'채권/안전자산', fill:'tozeroy', fillcolor:'rgba(0,212,170,0.3)', line:{color:'#00d4aa',width:2}}
   ], {
     paper_bgcolor:'#16213e', plot_bgcolor:'#16213e',
     font:{color:'#eaeaea', family:'Malgun Gothic'},
