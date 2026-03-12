@@ -163,10 +163,22 @@
   .tl-detail { color: #a0a0b0; font-size: 13px; margin-bottom: 4px; }
   .tl-amount { font-size: 12px; color: #4dabf7; }
 
-  /* 체크리스트 */
-  .checklist { display: flex; flex-direction: column; gap: 12px; }
-  .check-item { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; color: #eaeaea; font-size: 14px; line-height: 1.4; }
-  .check-item input[type=checkbox] { margin-top: 2px; accent-color: #00d4aa; width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+  /* 체크리스트 / 진단 */
+  .checklist { display: flex; flex-direction: column; gap: 0; }
+  .check-static { font-size: 13px; color: #a0a0b0; padding: 8px 0; border-bottom: 1px solid #1a1a3a; }
+  .check-static:last-child { border-bottom: none; }
+  #btn-diagnose { width: 100%; margin-top: 14px; padding: 10px; background: #0f0f23; border: 1px solid #4dabf7; border-radius: 8px; color: #4dabf7; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  #btn-diagnose:hover:not(:disabled) { background: #4dabf7; color: #0f0f23; }
+  #btn-diagnose:disabled { opacity: 0.6; cursor: not-allowed; }
+  .diag-sep { border-top: 1px solid #2a2a4a; margin-top: 16px; padding-top: 16px; }
+  .diag-ts { font-size: 11px; color: #6c757d; margin-bottom: 14px; }
+  .diag-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 10px; }
+  .diag-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .diag-label { font-size: 13px; font-weight: 600; }
+  .diag-detail { font-size: 11px; color: #a0a0b0; margin-top: 3px; line-height: 1.4; }
+  .diag-overall { margin-top: 14px; padding: 12px; border-radius: 8px; }
+  .diag-overall-title { font-size: 15px; font-weight: 700; }
+  .diag-overall-reason { font-size: 12px; margin-top: 5px; color: #eaeaea; line-height: 1.5; }
 
   /* 어드바이스 */
   .advice-list { display: flex; flex-direction: column; gap: 12px; }
@@ -318,14 +330,15 @@
   <!-- 체크리스트 + 어드바이스 -->
   <div class="grid-2-eq">
     <div class="card">
-      <h5>&#9989; 2차 실행 전 체크리스트</h5>
+      <h5>&#129302; 2차 실행 전 자동 진단</h5>
       <div class="checklist">
-        <label class="check-item"><input type="checkbox"> 예금형 4.9% 고정 계약 조건 변경 여부 확인</label>
-        <label class="check-item"><input type="checkbox"> 미국 대형주 / 반도체 / KOSPI 최근 흐름 확인</label>
-        <label class="check-item"><input type="checkbox"> 지정학 리스크 (전쟁, 유가, 환율) 점검</label>
-        <label class="check-item"><input type="checkbox"> 해당 펀드 판매 지속 여부 / 총보수 변경 확인</label>
-        <label class="check-item"><input type="checkbox"> 이상 없으면 계획대로 진행</label>
+        <div class="check-static">&#9744; 예금형 4.9% 고정 계약 조건 변경 여부</div>
+        <div class="check-static">&#9744; 미국 대형주 / 반도체 / KOSPI 최근 흐름</div>
+        <div class="check-static">&#9744; 지정학 리스크 (전쟁, 유가, 환율)</div>
+        <div class="check-static">&#9744; 해당 펀드 판매 지속 여부 / 총보수 변경</div>
       </div>
+      <button id="btn-diagnose" onclick="runDiagnosis()">&#128269; 진단 실행</button>
+      <div id="diagnosis-result" style="display:none"></div>
     </div>
     <div class="card">
       <h5>&#128161; 개인 어드바이스</h5>
@@ -517,6 +530,69 @@ const PORTFOLIOS = [
     alloc:{'IT/AI 테마':40, '글로벌성장주':40, 'TDF2045':20},
     reason:'AI·반도체·우주항공 고성장 섹터 집중. 단기 변동성 크나 15년 장기에서 최고 기대수익. 20% TDF가 하락 쿠션 역할' },
 ];
+
+// ── 자동 진단 ─────────────────────────────────────────────────────────────────
+async function runDiagnosis() {
+  const btn = document.getElementById('btn-diagnose');
+  const box = document.getElementById('diagnosis-result');
+  btn.disabled = true;
+  btn.textContent = '⏳ 진단 중...';
+  try {
+    const res = await fetch('./diagnosis_result.json?t=' + Date.now());
+    if (!res.ok) throw new Error('fetch failed');
+    renderDiagnosis(await res.json());
+    box.style.display = 'block';
+  } catch {
+    box.innerHTML = '<div class="diag-sep" style="color:#e94560">진단 데이터를 불러올 수 없습니다.<br>GitHub Actions → 투자 진단 자동 실행 → Run workflow 후 재시도하세요.</div>';
+    box.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔄 재진단';
+  }
+}
+
+function renderDiagnosis(data) {
+  const ICON  = { pass:'✅', warning:'⚠️', fail:'❌' };
+  const COLOR = { pass:'#00d4aa', warning:'#ffd43b', fail:'#e94560' };
+  const OV_COLOR = { PROCEED:'#00d4aa', CAUTION:'#ffd43b', HOLD:'#e94560' };
+  const OV_LABEL = { PROCEED:'✅ 진행 가능', CAUTION:'⚠️ 신중 검토', HOLD:'🛑 실행 보류' };
+
+  const ts = data.generated_at
+    ? new Date(data.generated_at).toLocaleString('ko-KR', { timeZone:'Asia/Seoul', hour12:false })
+    : '알 수 없음';
+
+  let html = `<div class="diag-sep"><div class="diag-ts">진단 기준: ${ts}</div>`;
+
+  for (const item of data.items) {
+    const c = COLOR[item.status];
+    html += `<div class="diag-row">
+      <span class="diag-icon">${ICON[item.status]}</span>
+      <div>
+        <div class="diag-label" style="color:${c}">${item.label}</div>
+        <div class="diag-detail">${item.detail}</div>
+      </div>
+    </div>`;
+  }
+
+  const oc = OV_COLOR[data.overall] || '#a0a0b0';
+  html += `<div class="diag-overall" style="background:${oc}18;border:1px solid ${oc}">
+    <div class="diag-overall-title" style="color:${oc}">${OV_LABEL[data.overall] || data.overall}</div>
+    <div class="diag-overall-reason">${data.reason}</div>
+  </div></div>`;
+
+  document.getElementById('diagnosis-result').innerHTML = html;
+
+  // 체크리스트 아이콘도 업데이트
+  const ids = ['deposit_rate','market_trend','geopolitical','fund_status'];
+  const statics = document.querySelectorAll('.check-static');
+  ids.forEach((id, i) => {
+    const item = data.items.find(x => x.id === id);
+    if (item && statics[i]) {
+      statics[i].textContent = ICON[item.status] + ' ' + statics[i].textContent.replace(/^[^ ]+ /, '');
+      statics[i].style.color = COLOR[item.status];
+    }
+  });
+}
 
 // ── 운용 현황 탭 ──────────────────────────────────────────────────────────────
 (function initStatus() {

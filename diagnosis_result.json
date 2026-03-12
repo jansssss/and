@@ -1,0 +1,32 @@
+{
+  "generated_at": "2026-03-12T09:00:00+09:00",
+  "overall": "HOLD",
+  "items": [
+    {
+      "id": "deposit_rate",
+      "label": "예금형 4.9% 고정 계약 조건 변경 여부",
+      "status": "pass",
+      "detail": "고정 계약 — 시장 금리 무관. 조건 변경 없음."
+    },
+    {
+      "id": "market_trend",
+      "label": "미국 대형주 / 반도체 / KOSPI 최근 흐름",
+      "status": "warning",
+      "detail": "SOX: 8,243 (1개월 -3.1%, 1주 -1.4%) · KOSPI: 5,533 (1개월 -8.2%, 1주 +5.4%) · ⚠️ KOSPI 1개월 -8.2% 하락"
+    },
+    {
+      "id": "geopolitical",
+      "label": "지정학 리스크 (전쟁, 유가, 환율)",
+      "status": "fail",
+      "detail": "WTI: $94/배럴 (1개월 +52%) · USD/KRW: 1,483원 · ⚠️ 유가 1개월 +52% 급등 — 시스템 리스크 / USD/KRW 1,483원 — 주의"
+    },
+    {
+      "id": "fund_status",
+      "label": "해당 펀드 판매 지속 여부 / 총보수 변경",
+      "status": "pass",
+      "detail": "미래에셋 MSCI AC World · 유리 필라델피아반도체 · 삼성 KOSPI200 — 정상 판매 중 (수동 재확인 권장)"
+    }
+  ],
+  "recommendation": "2차 실행 보류 권고",
+  "reason": "리스크 감지: 유가 1개월 +52% / USD/KRW 1,483원. 4월 10일 1주 전 재진단 권고."
+}
