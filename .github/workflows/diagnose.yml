@@ -19,6 +19,8 @@ jobs:
         run: pip install yfinance
 
       - name: Run diagnosis
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python scripts/diagnose.py
 
       - name: Commit result
