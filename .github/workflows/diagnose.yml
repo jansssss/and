@@ -1,9 +1,7 @@
-name: 투자 진단 자동 실행
+name: 투자 진단 수동 실행
 
 on:
-  schedule:
-    - cron: '0 0 * * *'   # 매일 09:00 KST
-  workflow_dispatch:
+  workflow_dispatch:   # 수동 실행 전용 (자동 진단은 notify.yml에 통합)
 
 jobs:
   diagnose:
