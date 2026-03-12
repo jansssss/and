@@ -144,21 +144,75 @@ def main():
         if sox_1m  and sox_1m  < -15: causes.append(f"SOX 1개월 {sox_1m:.1f}%")
         reason = ("리스크 감지: " + " / ".join(causes) if causes else "복합 리스크 감지") + \
                  ". 4월 10일 1주 전 재진단 권고."
+        action_items = []
+        if oil_1m and oil_1m > 30:
+            action_items.append({
+                "type": "defer",
+                "title": "KOSPI200 배분 이번 차수 제외",
+                "detail": f"유가 {oil_1m:+.0f}% 급등 시 국내 인플레이션·금리 상승 압박으로 KOSPI 추가 하락 가능. 2차 계획의 KOSPI200 1% 배분을 3차 이후로 이연."
+            })
+            action_items.append({
+                "type": "modify",
+                "title": "MSCI AC World 부분 실행 검토 가능",
+                "detail": "MSCI는 USD 자산이라 고환율 환경에서 KRW 기준 수익 보호 효과 있음. 원래 7% 대신 3~5%만 부분 실행 후 유가 안정 대기도 유효한 전략."
+            })
+        if krw_now and krw_now > 1450:
+            action_items.append({
+                "type": "monitor",
+                "title": "재진단 트리거 조건",
+                "detail": "① 유가 WTI $85/배럴 이하 회복 + ② USD/KRW 1,420원 이하 안정 → 두 조건 충족 시 재진단 후 원래 계획 실행."
+            })
+        if kos_1m and kos_1m < -10:
+            action_items.append({
+                "type": "modify",
+                "title": "KOSPI200 급락 시 역발상 검토",
+                "detail": f"KOSPI 1개월 {kos_1m:.1f}%는 장기 저가 매수 기회일 수 있음. 단, 유가·환율 리스크 해소 후 진입이 원칙."
+            })
+        action_items.append({
+            "type": "confirm",
+            "title": "4월 3일 재진단 예약 (실행 1주 전)",
+            "detail": "4월 10일 2차 실행일 1주 전 동일 진단 재실행. 리스크 해소 시 원래 계획대로, 지속 시 추가 보류 또는 수정안 적용."
+        })
     elif warn_n >= 2:
         overall        = "CAUTION"
         recommendation = "신중 검토 후 진행"
         reason = "주의 항목 복수 감지. 매수 금액 축소 또는 MSCI 코어 우선 검토."
+        action_items = [
+            {
+                "type": "modify",
+                "title": "매수 금액 50% 축소 실행",
+                "detail": "원래 10% 대신 5%만 먼저 집행. MSCI AC World 코어를 우선 채우고 테마(반도체, KOSPI200)는 다음 차수로."
+            },
+            {
+                "type": "monitor",
+                "title": "2주 후 잔여분 결정",
+                "detail": "시장 흐름 재확인 후 안정되면 잔여 5% 추가 집행."
+            }
+        ]
     else:
         overall        = "PROCEED"
         recommendation = "2차 실행 계획대로 진행"
         reason = "전 항목 이상 없음. 계획대로 진행."
+        action_items = [
+            {
+                "type": "confirm",
+                "title": "2차 계획 그대로 실행",
+                "detail": "MSCI AC World 7% + 필라델피아반도체 2% + KOSPI200 1% — 예정금액 3,378,721원."
+            },
+            {
+                "type": "confirm",
+                "title": "매수 전 최종 확인",
+                "detail": "과학기술공제 앱에서 펀드별 매수 화면 진입 후 금액 입력."
+            }
+        ]
 
     result = {
         "generated_at": now.isoformat(),
         "overall": overall,
         "items": items,
         "recommendation": recommendation,
-        "reason": reason
+        "reason": reason,
+        "action_items": action_items
     }
 
     with open("diagnosis_result.json", "w", encoding="utf-8") as f:

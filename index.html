@@ -578,8 +578,26 @@ function renderDiagnosis(data) {
   html += `<div class="diag-overall" style="background:${oc}18;border:1px solid ${oc}">
     <div class="diag-overall-title" style="color:${oc}">${OV_LABEL[data.overall] || data.overall}</div>
     <div class="diag-overall-reason">${data.reason}</div>
-  </div></div>`;
+  </div>`;
 
+  if (data.action_items && data.action_items.length > 0) {
+    const AICON  = { defer:'⏸', modify:'🔧', monitor:'👁', confirm:'▶' };
+    const ACOLOR = { defer:'#e94560', modify:'#ffd43b', monitor:'#4dabf7', confirm:'#00d4aa' };
+    html += `<div style="margin-top:14px"><div style="font-size:11px;color:#6c757d;margin-bottom:8px;letter-spacing:.5px">— 권고 액션 —</div>`;
+    for (const a of data.action_items) {
+      const ac = ACOLOR[a.type] || '#a0a0b0';
+      html += `<div style="display:flex;gap:8px;margin-bottom:8px;padding:9px 10px;background:#0a0a1e;border-radius:6px;border-left:3px solid ${ac}">
+        <span style="font-size:13px;flex-shrink:0;margin-top:1px">${AICON[a.type]||'•'}</span>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:${ac}">${a.title}</div>
+          <div style="font-size:11px;color:#a0a0b0;margin-top:3px;line-height:1.5">${a.detail}</div>
+        </div>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
   document.getElementById('diagnosis-result').innerHTML = html;
 
   // 체크리스트 아이콘도 업데이트
