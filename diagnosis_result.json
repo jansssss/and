@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-16T11:14:25.287747+09:00",
+  "generated_at": "2026-03-17T11:01:30.484369+09:00",
   "overall": "HOLD",
   "items": [
     {
@@ -12,13 +12,13 @@
       "id": "market_trend",
       "label": "미국 대형주 / 반도체 / KOSPI 최근 흐름",
       "status": "pass",
-      "detail": "SOX: 7,647 (1개월 -7.8%, 1주 -2.1%) · KOSPI: 5,499 (1개월 +3.8%, 1주 -0.6%)"
+      "detail": "SOX: 7,796 (1개월 -3.6%, 1주 -0.9%) · KOSPI: 5,693 (1개월 +7.4%, 1주 +2.9%)"
     },
     {
       "id": "geopolitical",
       "label": "지정학 리스크 (전쟁, 유가, 환율)",
       "status": "fail",
-      "detail": "WTI(FRED EIA): $94.7/배럴 (1개월 +50.5%) · USD/KRW: 1498원 · ⚠️ 유가 1개월 +50% 급등 — 시스템 리스크 / USD/KRW 1498원 — 주의"
+      "detail": "WTI(FRED EIA): $94.7/배럴 (1개월 +50.5%) · USD/KRW: 1492원 · ⚠️ 유가 1개월 +50% 급등 — 시스템 리스크 / USD/KRW 1492원 — 주의"
     },
     {
       "id": "macro_economy",
@@ -34,7 +34,7 @@
     }
   ],
   "recommendation": "2차 실행 보류 권고",
-  "reason": "리스크 감지: 유가 1개월 +50% / USD/KRW 1498원. 4월 10일 1주 전 재진단 권고.",
+  "reason": "리스크 감지: 유가 1개월 +50% / USD/KRW 1492원. 4월 10일 1주 전 재진단 권고.",
   "action_items": [
     {
       "type": "defer",
