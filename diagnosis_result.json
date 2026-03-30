@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-29T11:22:29.366298+09:00",
+  "generated_at": "2026-03-30T11:25:17.329366+09:00",
   "overall": "HOLD",
   "items": [
     {
@@ -12,13 +12,13 @@
       "id": "market_trend",
       "label": "미국 대형주 / 반도체 / KOSPI 최근 흐름",
       "status": "fail",
-      "detail": "SOX: 7,458 (1개월 -9.0%, 1주 -4.1%) · KOSPI: 5,439 (1개월 -10.6%, 1주 +0.6%) · ⚠️ KOSPI 1개월 -10.6% 급락"
+      "detail": "SOX: 7,458 (1개월 -9.0%, 1주 -4.1%) · KOSPI: 5,236 (1개월 -17.0%, 1주 -5.7%) · ⚠️ KOSPI 1개월 -17.0% 급락"
     },
     {
       "id": "geopolitical",
       "label": "지정학 리스크 (전쟁, 유가, 환율)",
       "status": "fail",
-      "detail": "WTI(FRED EIA): $89.3/배럴 (1개월 +33.9%) · USD/KRW: 1508원 · ⚠️ 유가 1개월 +34% 급등 — 시스템 리스크 / USD/KRW 1508원 — 위험 수준"
+      "detail": "WTI(FRED EIA): $89.3/배럴 (1개월 +33.9%) · USD/KRW: 1512원 · ⚠️ 유가 1개월 +34% 급등 — 시스템 리스크 / USD/KRW 1512원 — 위험 수준"
     },
     {
       "id": "macro_economy",
@@ -34,7 +34,7 @@
     }
   ],
   "recommendation": "2차 실행 보류 권고",
-  "reason": "리스크 감지: 유가 1개월 +34% / USD/KRW 1508원 / KOSPI 1개월 -10.6%. 4월 10일 1주 전 재진단 권고.",
+  "reason": "리스크 감지: 유가 1개월 +34% / USD/KRW 1512원 / KOSPI 1개월 -17.0%. 4월 10일 1주 전 재진단 권고.",
   "action_items": [
     {
       "type": "defer",
@@ -54,7 +54,7 @@
     {
       "type": "modify",
       "title": "KOSPI200 급락 시 역발상 검토",
-      "detail": "KOSPI 1개월 -10.6%는 장기 저가 매수 기회일 수 있음. 단, 유가·환율 리스크 해소 후 진입이 원칙."
+      "detail": "KOSPI 1개월 -17.0%는 장기 저가 매수 기회일 수 있음. 단, 유가·환율 리스크 해소 후 진입이 원칙."
     },
     {
       "type": "confirm",
