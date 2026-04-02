@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-01T11:29:50.523005+09:00",
+  "generated_at": "2026-04-02T11:08:50.614850+09:00",
   "overall": "HOLD",
   "items": [
     {
@@ -11,14 +11,14 @@
     {
       "id": "market_trend",
       "label": "미국 대형주 / 반도체 / KOSPI 최근 흐름",
-      "status": "warning",
-      "detail": "SOX: 7,588 (1개월 -6.7%, 1주 -4.8%) · KOSPI: 5,368 (1개월 -7.3%, 1주 -1.7%) · ⚠️ KOSPI 1개월 -7.3% 하락"
+      "status": "pass",
+      "detail": "SOX: 7,802 (1개월 +0.5%, 1주 +2.9%) · KOSPI: 5,273 (1개월 +3.5%, 1주 -3.1%)"
     },
     {
       "id": "geopolitical",
       "label": "지정학 리스크 (전쟁, 유가, 환율)",
       "status": "fail",
-      "detail": "WTI(FRED EIA): $89.3/배럴 (1개월 +33.9%) · USD/KRW: 1507원 · ⚠️ 유가 1개월 +34% 급등 — 시스템 리스크 / USD/KRW 1507원 — 위험 수준"
+      "detail": "WTI(FRED EIA): $104.7/배럴 (1개월 +56.3%) · USD/KRW: 1519원 · ⚠️ 유가 1개월 +56% 급등 — 시스템 리스크 / USD/KRW 1519원 — 위험 수준"
     },
     {
       "id": "macro_economy",
@@ -34,12 +34,12 @@
     }
   ],
   "recommendation": "2차 실행 보류 권고",
-  "reason": "리스크 감지: 유가 1개월 +34% / USD/KRW 1507원. 4월 10일 1주 전 재진단 권고.",
+  "reason": "리스크 감지: 유가 1개월 +56% / USD/KRW 1519원. 4월 10일 1주 전 재진단 권고.",
   "action_items": [
     {
       "type": "defer",
       "title": "KOSPI200 배분 이번 차수 제외",
-      "detail": "유가 +34% 급등 시 국내 인플레이션·금리 상승 압박으로 KOSPI 추가 하락 가능. 2차 계획의 KOSPI200 1% 배분을 3차 이후로 이연."
+      "detail": "유가 +56% 급등 시 국내 인플레이션·금리 상승 압박으로 KOSPI 추가 하락 가능. 2차 계획의 KOSPI200 1% 배분을 3차 이후로 이연."
     },
     {
       "type": "modify",
