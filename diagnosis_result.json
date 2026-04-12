@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-11T11:07:02.620278+09:00",
+  "generated_at": "2026-04-12T11:29:12.107736+09:00",
   "overall": "HOLD",
   "items": [
     {
@@ -18,7 +18,7 @@
       "id": "geopolitical",
       "label": "지정학 리스크 (전쟁, 유가, 환율)",
       "status": "fail",
-      "detail": "WTI(FRED EIA): $114.0/배럴 (1개월 +41.0%) · USD/KRW: 1485원 · ⚠️ 유가 1개월 +41% 급등 — 시스템 리스크 / USD/KRW 1485원 — 주의"
+      "detail": "WTI(FRED EIA): $114.0/배럴 (1개월 +41.0%) · USD/KRW: 1483원 · ⚠️ 유가 1개월 +41% 급등 — 시스템 리스크 / USD/KRW 1483원 — 주의"
     },
     {
       "id": "macro_economy",
@@ -34,7 +34,7 @@
     }
   ],
   "recommendation": "2차 실행 보류 권고",
-  "reason": "리스크 감지: 유가 1개월 +41% / USD/KRW 1485원. 4월 10일 1주 전 재진단 권고.",
+  "reason": "리스크 감지: 유가 1개월 +41% / USD/KRW 1483원. 4월 10일 1주 전 재진단 권고.",
   "action_items": [
     {
       "type": "defer",
