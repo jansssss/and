@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-15T11:26:14.547135+09:00",
-  "overall": "HOLD",
+  "generated_at": "2026-04-16T11:33:06.948927+09:00",
+  "overall": "CAUTION",
   "items": [
     {
       "id": "deposit_rate",
@@ -12,13 +12,13 @@
       "id": "market_trend",
       "label": "미국 대형주 / 반도체 / KOSPI 최근 흐름",
       "status": "pass",
-      "detail": "SOX: 9,224 (1개월 +20.6%, 1주 +8.4%) · KOSPI: 6,141 (1개월 +8.9%, 1주 +6.3%)"
+      "detail": "SOX: 9,239 (1개월 +18.5%, 1주 +6.3%) · KOSPI: 6,224 (1개월 +5.0%, 1주 +6.2%)"
     },
     {
       "id": "geopolitical",
       "label": "지정학 리스크 (전쟁, 유가, 환율)",
-      "status": "fail",
-      "detail": "WTI(FRED EIA): $114.0/배럴 (1개월 +41.0%) · USD/KRW: 1473원 · ⚠️ 유가 1개월 +41% 급등 — 시스템 리스크 / USD/KRW 1473원 — 주의"
+      "status": "warning",
+      "detail": "WTI(FRED EIA): $100.7/배럴 (1개월 +5.3%) · USD/KRW: 1473원 · ⚠️ USD/KRW 1473원 — 주의"
     },
     {
       "id": "macro_economy",
@@ -33,28 +33,18 @@
       "detail": "미래에셋 MSCI AC World · 유리 필라델피아반도체 · 삼성 KOSPI200 — 정상 판매 중 (수동 재확인 권장)"
     }
   ],
-  "recommendation": "2차 실행 보류 권고",
-  "reason": "리스크 감지: 유가 1개월 +41%. 4월 10일 1주 전 재진단 권고.",
+  "recommendation": "신중 검토 후 진행",
+  "reason": "주의 항목 복수 감지. 매수 금액 축소 또는 MSCI 코어 우선 검토.",
   "action_items": [
     {
-      "type": "defer",
-      "title": "KOSPI200 배분 이번 차수 제외",
-      "detail": "유가 +41% 급등 시 국내 인플레이션·금리 상승 압박으로 KOSPI 추가 하락 가능. 2차 계획의 KOSPI200 1% 배분을 3차 이후로 이연."
-    },
-    {
       "type": "modify",
-      "title": "MSCI AC World 부분 실행 검토 가능",
-      "detail": "MSCI는 USD 자산이라 고환율 환경에서 KRW 기준 수익 보호 효과 있음. 원래 7% 대신 3~5%만 부분 실행 후 유가 안정 대기도 유효한 전략."
+      "title": "매수 금액 50% 축소 실행",
+      "detail": "원래 10% 대신 5%만 먼저 집행. MSCI AC World 코어를 우선 채우고 테마(반도체, KOSPI200)는 다음 차수로."
     },
     {
       "type": "monitor",
-      "title": "재진단 트리거 조건",
-      "detail": "① 유가 WTI $85/배럴 이하 회복 + ② USD/KRW 1,420원 이하 안정 → 두 조건 충족 시 재진단 후 원래 계획 실행."
-    },
-    {
-      "type": "confirm",
-      "title": "4월 3일 재진단 예약 (실행 1주 전)",
-      "detail": "4월 10일 2차 실행일 1주 전 동일 진단 재실행. 리스크 해소 시 원래 계획대로, 지속 시 추가 보류 또는 수정안 적용."
+      "title": "2주 후 잔여분 결정",
+      "detail": "시장 흐름 재확인 후 안정되면 잔여 5% 추가 집행."
     }
   ]
 }
