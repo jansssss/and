@@ -47,14 +47,19 @@ def main():
         period="2mo",
         progress=False,
         auto_adjust=True,
+        threads=False,
     )
-    closes = yf_data["Close"]
+    closes = yf_data["Close"] if "Close" in yf_data else yf_data
 
     def val(ticker):
+        if ticker not in closes:
+            return None
         s = closes[ticker].dropna()
         return s.iloc[-1] if len(s) else None
 
     def pct(ticker, days):
+        if ticker not in closes:
+            return None
         s = closes[ticker].dropna()
         if len(s) < days:
             return None
@@ -75,6 +80,11 @@ def main():
 
     def fmt_pct(v):
         return f"{v:+.1f}%" if v is not None else "N/A"
+
+    def fmt_num(v, digits=0, suffix=""):
+        if v is None:
+            return "N/A"
+        return f"{v:,.{digits}f}{suffix}"
 
     items = []
 
@@ -103,8 +113,8 @@ def main():
             mkt_status = "warning"; mkt_warn.append(f"SOX 1개월 {sox_1m:.1f}% 하락")
 
     mkt_detail = (
-        f"SOX: {sox_now:,.0f} (1개월 {fmt_pct(sox_1m)}, 1주 {fmt_pct(sox_1w)}) · "
-        f"KOSPI: {kos_now:,.0f} (1개월 {fmt_pct(kos_1m)}, 1주 {fmt_pct(kos_1w)})"
+        f"SOX: {fmt_num(sox_now)} (1개월 {fmt_pct(sox_1m)}, 1주 {fmt_pct(sox_1w)}) · "
+        f"KOSPI: {fmt_num(kos_now)} (1개월 {fmt_pct(kos_1m)}, 1주 {fmt_pct(kos_1w)})"
     )
     if mkt_warn:
         mkt_detail += " · ⚠️ " + " / ".join(mkt_warn)
@@ -135,9 +145,9 @@ def main():
             geo_warn.append(f"USD/KRW {krw_now:.0f}원 — 주의")
 
     geo_detail = (
-        f"WTI(FRED EIA): ${oil_now:.1f}/배럴 (1개월 {fmt_pct(oil_1m)}) · "
-        f"USD/KRW: {krw_now:.0f}원"
-    ) if oil_now and krw_now else "데이터 수집 실패"
+        f"WTI(FRED EIA): ${fmt_num(oil_now, 1)}/배럴 (1개월 {fmt_pct(oil_1m)}) · "
+        f"USD/KRW: {fmt_num(krw_now, 0, '원')}"
+    ) if oil_now is not None or krw_now is not None else "데이터 수집 실패"
     if geo_warn:
         geo_detail += " · ⚠️ " + " / ".join(geo_warn)
 
