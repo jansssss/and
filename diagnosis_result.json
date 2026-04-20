@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T11:12:12.086528+09:00",
+  "generated_at": "2026-04-20T11:34:52.713102+09:00",
   "overall": "CAUTION",
   "items": [
     {
@@ -12,13 +12,13 @@
       "id": "market_trend",
       "label": "미국 대형주 / 반도체 / KOSPI 최근 흐름",
       "status": "pass",
-      "detail": "SOX: 9,556 (1개월 +22.6%, 1주 +5.7%) · KOSPI: 6,192 (1개월 +7.4%, 1주 +6.6%)"
+      "detail": "SOX: 9,556 (1개월 +22.6%, 1주 +5.7%) · KOSPI: 6,274 (1개월 +8.5%, 1주 +5.1%)"
     },
     {
       "id": "geopolitical",
       "label": "지정학 리스크 (전쟁, 유가, 환율)",
       "status": "warning",
-      "detail": "WTI(FRED EIA): $100.7/배럴 (1개월 +5.3%) · USD/KRW: 1466원 · ⚠️ USD/KRW 1466원 — 주의"
+      "detail": "WTI(FRED EIA): $100.7/배럴 (1개월 +5.3%) · USD/KRW: 1,473원 · ⚠️ USD/KRW 1473원 — 주의"
     },
     {
       "id": "macro_economy",
