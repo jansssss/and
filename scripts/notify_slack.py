@@ -86,7 +86,7 @@ with urllib.request.urlopen(req, timeout=10) as resp:
     result = json.loads(resp.read())
 
 if result.get("ok"):
-    print(f"Slack DM 발송 완료 — {round_num}차 실행 예정일 {date_str}")
+    print(f"Slack DM 발송 완료 - {round_num}차 실행 예정일 {date_str}")
 else:
     print(f"Slack 발송 실패: {result.get('error')}")
     sys.exit(1)

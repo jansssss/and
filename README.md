@@ -45,10 +45,12 @@ python app.py
 
 - `펀드+필터+검색-20260310.xlsx` : 2026.03.10 기준 퇴직연금 펀드 데이터
 - `fund_data.json` : GitHub Pages용 정적 데이터
+- `diagnosis_result.json` : `https://finance.naver.com` 기준 자동 진단 결과
 
 ## Slack 실행 예정일 알림
 
 `퇴직금운용계획.md`의 실행 예정일 **하루 전** 09:00 KST에 Slack DM을 자동 발송한다.
+알림 전 자동 진단은 Naver Finance 데이터를 사용한다.
 
 ### GitHub Secrets 설정 (Settings → Secrets → Actions)
 

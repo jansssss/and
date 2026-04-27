@@ -206,7 +206,7 @@ app.layout = html.Div(style={'backgroundColor': COLORS['bg'], 'minHeight': '100v
                 html.P('과학기술공제회 | BlackRock 운용 전략 기반 포트폴리오 추천', style={'color': COLORS['muted'], 'margin': '6px 0 0 0', 'fontSize': '14px'}),
             ]),
             html.Div(style={'textAlign': 'right'}, children=[
-                html.Span('📅 2026.03.10 기준', style={'color': COLORS['muted'], 'fontSize': '13px'}),
+                html.Span('📅 진단 2026.04.27 / 펀드 2026.03.10', style={'color': COLORS['muted'], 'fontSize': '13px'}),
                 html.Br(),
                 html.Span(f"📊 분석 대상: {len(DF)}개 퇴직연금 펀드", style={'color': COLORS['yellow'], 'fontSize': '13px'}),
             ])

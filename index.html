@@ -209,7 +209,7 @@
     <p>과학기술공제회 | 분할 리빌딩 전략 운용 현황</p>
   </div>
   <div class="header-right">
-    <span>&#128197; 2026.03.10 기준</span><br>
+    <span>&#128197; 진단 2026.04.27 / 펀드 2026.03.10</span><br>
     <span class="badge">275개 퇴직연금 펀드 분석</span>
   </div>
 </div>
@@ -238,13 +238,13 @@
     </div>
     <div class="metric-card">
       <div class="label">리빌딩 진행</div>
-      <div class="value" style="color:#4dabf7">1 / 3차</div>
-      <div class="sub">2026-03-10 1차 완료</div>
+      <div class="value" style="color:#4dabf7">1차 완료</div>
+      <div class="sub">2차 기한 경과 · 확인 필요</div>
     </div>
     <div class="metric-card">
-      <div class="label">다음 실행 예정일</div>
-      <div class="value" style="color:#ffd43b">2026-04-10</div>
-      <div class="sub">2차 · 매수 전 진단 필수</div>
+      <div class="label">실행 판단일</div>
+      <div class="value" style="color:#ffd43b">2026-04-27</div>
+      <div class="sub">진단 결과 CAUTION · 축소 검토</div>
     </div>
     <div class="metric-card">
       <div class="label">목표 완료 후 기대수익률</div>
@@ -257,13 +257,13 @@
   <div class="card" style="padding:16px 20px;margin-bottom:16px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       <span style="font-weight:700;font-size:14px">&#127381; 운용형 전환 진행률 (목표 30%)</span>
-      <span style="color:#4dabf7;font-weight:700">10% / 30% 완료</span>
+      <span style="color:#4dabf7;font-weight:700">10% / 30% 완료 확인</span>
     </div>
     <div class="progress-bar-wrap">
       <div class="progress-bar-fill" style="width:33.3%"></div>
     </div>
     <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:12px;color:#a0a0b0">
-      <span>1차 완료 ✅</span><span>2차 예정 04-10 🔜</span><span>3차 예정 05-10 🔜</span>
+      <span>1차 완료 ✅</span><span>2차 기한 경과 ⚠️</span><span>3차 예정 05-10 🔜</span>
     </div>
   </div>
 
@@ -276,7 +276,7 @@
         <div class="tl-item">
           <div class="tl-dot done"></div>
           <div>
-            <div class="tl-title" style="color:#00d4aa">&#9989; 1차 실행 완료 — 2026-03-10</div>
+            <div class="tl-title" style="color:#00d4aa">&#9989; 1차 실행 완료 - 2026-03-10</div>
             <div class="tl-detail">MSCI AC World 7% + 필라델피아반도체 3%</div>
             <div class="tl-amount">이동금액: 3,378,721원 (전체의 10%)</div>
           </div>
@@ -284,17 +284,17 @@
         <div class="tl-item">
           <div class="tl-dot next"></div>
           <div>
-            <div class="tl-title" style="color:#ffd43b">&#128282; 2차 실행 예정 — 2026-04-10</div>
+            <div class="tl-title" style="color:#ffd43b">&#9888;&#65039; 2차 실행 예정일 경과 - 2026-04-10</div>
             <div class="tl-detail">MSCI AC World 7% + 필라델피아반도체 2% + KOSPI200 1%</div>
-            <div class="tl-amount">예정금액: 3,378,721원 · <span style="color:#ffd43b">매수 전 진단 필수</span></div>
+            <div class="tl-amount">미집행 시 5% 이내 축소 검토 · <span style="color:#ffd43b">2026-04-27 진단 CAUTION</span></div>
           </div>
         </div>
         <div class="tl-item">
           <div class="tl-dot later"></div>
           <div>
-            <div class="tl-title" style="color:#a0a0b0">&#128336; 3차 실행 예정 — 2026-05-10</div>
+            <div class="tl-title" style="color:#a0a0b0">&#128336; 3차 실행 예정 - 2026-05-10</div>
             <div class="tl-detail">MSCI AC World 6% + 필라델피아반도체 2% + KOSPI200 2%</div>
-            <div class="tl-amount">예정금액: 3,378,721원 · <span style="color:#a0a0b0">2차 이후 재진단</span></div>
+            <div class="tl-amount">예정금액: 3,378,721원 · <span style="color:#a0a0b0">실행 전 재진단</span></div>
           </div>
         </div>
       </div>
@@ -317,11 +317,11 @@
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="forecast-box">
           <div class="f-label">예금 100% 유지 시</div>
-          <div class="f-value" style="color:#6c757d" id="fc-deposit">—</div>
+          <div class="f-value" style="color:#6c757d" id="fc-deposit">-</div>
         </div>
         <div class="forecast-box">
           <div class="f-label">계획 완료 시 (5.2%/년)</div>
-          <div class="f-value" style="color:#00d4aa" id="fc-plan">—</div>
+          <div class="f-value" style="color:#00d4aa" id="fc-plan">-</div>
         </div>
       </div>
     </div>
@@ -330,7 +330,7 @@
   <!-- 체크리스트 + 어드바이스 -->
   <div class="grid-2-eq">
     <div class="card">
-      <h5>&#129302; 2차 실행 전 자동 진단</h5>
+      <h5>&#129302; 2차 미집행분 자동 진단</h5>
       <div class="checklist">
         <div class="check-static">&#9744; 예금형 4.9% 고정 계약 조건 변경 여부</div>
         <div class="check-static">&#9744; 미국 대형주 / 반도체 / KOSPI 최근 흐름</div>
@@ -348,7 +348,7 @@
           <div class="advice-body">예금형 4.9% 고정 복리가 전체 수익의 기반 (시중 채권보다 유리한 조건). 주식 변동에 흔들려 코어를 줄이면 전략 붕괴.</div>
         </div>
         <div class="advice-item" style="border-left-color:#4dabf7">
-          <div class="advice-title">급락해도 계획대로 — 오히려 기회</div>
+          <div class="advice-title">급락해도 계획대로 - 오히려 기회</div>
           <div class="advice-body">10~15% 급락 시 MSCI AC World 같은 코어형 우선 매수. 테마 비중 확대 금지.</div>
         </div>
         <div class="advice-item" style="border-left-color:#ffd43b">
@@ -356,7 +356,7 @@
           <div class="advice-body">매수 충동이 생겨도 금리·시장·지정학·상품 4가지 진단 후 진행. 충동 매수 금지.</div>
         </div>
         <div class="advice-item" style="border-left-color:#e94560">
-          <div class="advice-title">KOSPI200은 최소 비중 — 4.9% 허들</div>
+          <div class="advice-title">KOSPI200은 최소 비중 - 4.9% 허들</div>
           <div class="advice-body">KOSPI200 총보수 차감 후 기대수익이 4.9% 고정과 차이가 크지 않음. 비중 3%로 최소화하고 초과수익 기대는 MSCI AC World에 집중.</div>
         </div>
       </div>
@@ -583,7 +583,7 @@ function renderDiagnosis(data) {
   if (data.action_items && data.action_items.length > 0) {
     const AICON  = { defer:'⏸', modify:'🔧', monitor:'👁', confirm:'▶' };
     const ACOLOR = { defer:'#e94560', modify:'#ffd43b', monitor:'#4dabf7', confirm:'#00d4aa' };
-    html += `<div style="margin-top:14px"><div style="font-size:11px;color:#6c757d;margin-bottom:8px;letter-spacing:.5px">— 권고 액션 —</div>`;
+    html += `<div style="margin-top:14px"><div style="font-size:11px;color:#6c757d;margin-bottom:8px;letter-spacing:.5px">- 권고 액션 -</div>`;
     for (const a of data.action_items) {
       const ac = ACOLOR[a.type] || '#a0a0b0';
       html += `<div style="display:flex;gap:8px;margin-bottom:8px;padding:9px 10px;background:#0a0a1e;border-radius:6px;border-left:3px solid ${ac}">
