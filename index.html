@@ -163,6 +163,23 @@
   .tl-detail { color: #a0a0b0; font-size: 13px; margin-bottom: 4px; }
   .tl-amount { font-size: 12px; color: #4dabf7; }
 
+  /* 리밸런싱 */
+  .rebalance-grid { display: grid; grid-template-columns: 360px 1fr; gap: 18px; align-items: stretch; }
+  .rebalance-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-content: start; }
+  .rebalance-field label { display: block; color: #a0a0b0; font-size: 12px; margin-bottom: 5px; }
+  .rebalance-field input {
+    width: 100%; background: #0f3460; color: #eaeaea; border: 1px solid #1e3a6e;
+    border-radius: 6px; padding: 8px 10px; font-family: inherit; font-size: 13px;
+  }
+  .rebalance-result { grid-column: 1 / -1; background: #0a0a1e; border-left: 3px solid #4dabf7; border-radius: 0 8px 8px 0; padding: 12px 14px; }
+  .rebalance-result .r-main { font-size: 18px; font-weight: 800; color: #ffd43b; }
+  .rebalance-result .r-sub { color: #a0a0b0; font-size: 12px; margin-top: 4px; line-height: 1.5; }
+  .rebalance-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+  .rebalance-table th { background: #0f3460; color: #ffd43b; padding: 8px; }
+  .rebalance-table td { border: 1px solid #0f3460; padding: 8px; text-align: center; color: #eaeaea; }
+  .rebalance-table td.pos { color: #00d4aa; font-weight: 700; }
+  .rebalance-table td.neg { color: #e94560; font-weight: 700; }
+
   /* 체크리스트 / 진단 */
   .checklist { display: flex; flex-direction: column; gap: 0; }
   .check-static { font-size: 13px; color: #a0a0b0; padding: 8px 0; border-bottom: 1px solid #1a1a3a; }
@@ -193,7 +210,8 @@
 
   @media (max-width: 900px) {
     .metrics { grid-template-columns: repeat(2, 1fr); }
-    .grid-2, .grid-2-eq, .grid-4 { grid-template-columns: 1fr; }
+    .grid-2, .grid-2-eq, .grid-4, .rebalance-grid { grid-template-columns: 1fr; }
+    .rebalance-controls { grid-template-columns: 1fr 1fr; }
     .content { padding: 16px 16px; }
     .header { padding: 14px 16px; flex-direction: column; gap: 8px; }
     .tabs { padding: 12px 16px 0; overflow-x: auto; }
@@ -303,6 +321,44 @@
     <!-- 포트폴리오 도넛 -->
     <div class="card" style="padding:14px">
       <div id="plot-current-alloc"></div>
+    </div>
+  </div>
+
+  <!-- 리밸런싱 계산 -->
+  <div class="card">
+    <h5>&#9878;&#65039; 리밸런싱 필요 금액</h5>
+    <div class="rebalance-grid">
+      <div class="rebalance-controls">
+        <div class="rebalance-field">
+          <label for="rb-deposit">예금형 현재금액(만원)</label>
+          <input id="rb-deposit" type="number" value="3041" min="0" step="1" oninput="updateRebalance()">
+        </div>
+        <div class="rebalance-field">
+          <label for="rb-msci">MSCI 현재금액(만원)</label>
+          <input id="rb-msci" type="number" value="236" min="0" step="1" oninput="updateRebalance()">
+        </div>
+        <div class="rebalance-field">
+          <label for="rb-semi">반도체 현재금액(만원)</label>
+          <input id="rb-semi" type="number" value="101" min="0" step="1" oninput="updateRebalance()">
+        </div>
+        <div class="rebalance-field">
+          <label for="rb-kospi">KOSPI200 현재금액(만원)</label>
+          <input id="rb-kospi" type="number" value="0" min="0" step="1" oninput="updateRebalance()">
+        </div>
+        <div class="rebalance-field">
+          <label for="rb-target">목표 운용비중(%)</label>
+          <input id="rb-target" type="number" value="10" min="0" max="100" step="0.5" oninput="updateRebalance()">
+        </div>
+        <div class="rebalance-field">
+          <label for="rb-band">허용 이탈폭(%p)</label>
+          <input id="rb-band" type="number" value="5" min="0" max="20" step="0.5" oninput="updateRebalance()">
+        </div>
+        <div class="rebalance-result" id="rebalance-result"></div>
+      </div>
+      <div>
+        <div id="plot-rebalance"></div>
+        <table class="rebalance-table" id="rebalance-table"></table>
+      </div>
     </div>
   </div>
 
@@ -612,6 +668,122 @@ function renderDiagnosis(data) {
   });
 }
 
+function rbNumber(id) {
+  return Math.max(0, parseFloat(document.getElementById(id).value) || 0);
+}
+
+function fmtWonMan(v) {
+  return Math.round(v).toLocaleString() + '만원';
+}
+
+function updateRebalance() {
+  const deposit = rbNumber('rb-deposit');
+  const msci = rbNumber('rb-msci');
+  const semi = rbNumber('rb-semi');
+  const kospi = rbNumber('rb-kospi');
+  const targetOpPct = Math.min(100, rbNumber('rb-target'));
+  const band = Math.max(0, rbNumber('rb-band'));
+  const op = msci + semi + kospi;
+  const total = deposit + op;
+  const result = document.getElementById('rebalance-result');
+  const table = document.getElementById('rebalance-table');
+
+  if (total <= 0) {
+    result.innerHTML = '<div class="r-main">금액 입력 필요</div><div class="r-sub">총액이 0원입니다.</div>';
+    table.innerHTML = '';
+    return;
+  }
+
+  const currentOpPct = op / total * 100;
+  const currentDepositPct = deposit / total * 100;
+  const targetDepositPct = 100 - targetOpPct;
+  const drift = currentOpPct - targetOpPct;
+  const targetOpAmount = total * targetOpPct / 100;
+  const targetDepositAmount = total - targetOpAmount;
+  const moveAmount = Math.abs(op - targetOpAmount);
+  const trigger = Math.abs(drift) >= band;
+
+  let title, detail, accent;
+  if (!trigger) {
+    title = '조정 없음';
+    detail = `현재 운용비중 ${currentOpPct.toFixed(1)}%, 목표 ${targetOpPct.toFixed(1)}%, 이탈 ${drift.toFixed(1)}%p`;
+    accent = '#00d4aa';
+  } else if (drift > 0) {
+    title = `${fmtWonMan(moveAmount)} 예금형 이동`;
+    detail = `운용상품이 목표보다 ${drift.toFixed(1)}%p 높음. 초과분을 줄이면 예금 ${targetDepositPct.toFixed(1)}% / 운용 ${targetOpPct.toFixed(1)}%로 복귀.`;
+    accent = '#ffd43b';
+  } else {
+    title = `${fmtWonMan(moveAmount)} 운용상품 이동`;
+    detail = `운용상품이 목표보다 ${Math.abs(drift).toFixed(1)}%p 낮음. 부족분을 채우면 예금 ${targetDepositPct.toFixed(1)}% / 운용 ${targetOpPct.toFixed(1)}%로 복귀.`;
+    accent = '#4dabf7';
+  }
+
+  result.style.borderLeftColor = accent;
+  result.innerHTML = `<div class="r-main" style="color:${accent}">${title}</div><div class="r-sub">${detail}</div>`;
+
+  const rows = [
+    {
+      name: '예금형',
+      currentPct: currentDepositPct,
+      targetPct: targetDepositPct,
+      currentAmount: deposit,
+      targetAmount: targetDepositAmount,
+      diff: targetDepositAmount - deposit,
+    },
+    {
+      name: '운용상품 합계',
+      currentPct: currentOpPct,
+      targetPct: targetOpPct,
+      currentAmount: op,
+      targetAmount: targetOpAmount,
+      diff: targetOpAmount - op,
+    },
+  ];
+  table.innerHTML = `<thead><tr><th>구분</th><th>현재</th><th>목표</th><th>이동</th></tr></thead><tbody>${
+    rows.map(r => {
+      const cls = r.diff >= 0 ? 'pos' : 'neg';
+      const sign = r.diff > 0 ? '+' : '';
+      return `<tr>
+        <td>${r.name}</td>
+        <td>${r.currentPct.toFixed(1)}%<br>${fmtWonMan(r.currentAmount)}</td>
+        <td>${r.targetPct.toFixed(1)}%<br>${fmtWonMan(r.targetAmount)}</td>
+        <td class="${cls}">${sign}${fmtWonMan(r.diff)}</td>
+      </tr>`;
+    }).join('')
+  }</tbody>`;
+
+  Plotly.react('plot-rebalance', [
+    {
+      x: ['예금형', '운용상품'],
+      y: [currentDepositPct, currentOpPct],
+      name: '현재',
+      type: 'bar',
+      marker: { color: '#4dabf7' },
+      text: [currentDepositPct, currentOpPct].map(v => v.toFixed(1) + '%'),
+      textposition: 'outside',
+    },
+    {
+      x: ['예금형', '운용상품'],
+      y: [targetDepositPct, targetOpPct],
+      name: '목표',
+      type: 'bar',
+      marker: { color: '#00d4aa' },
+      text: [targetDepositPct, targetOpPct].map(v => v.toFixed(1) + '%'),
+      textposition: 'outside',
+    },
+  ], {
+    barmode: 'group',
+    paper_bgcolor: '#16213e',
+    plot_bgcolor: '#16213e',
+    font: { color: '#eaeaea', family: 'Malgun Gothic' },
+    yaxis: { title: '비중', range: [0, 100], ticksuffix: '%', gridcolor: '#0f3460' },
+    xaxis: { gridcolor: '#0f3460' },
+    legend: { bgcolor: '#1a1a2e', orientation: 'h', y: -0.2 },
+    height: 260,
+    margin: { t: 20, r: 20, b: 60, l: 50 },
+  }, { responsive: true });
+}
+
 // ── 운용 현황 탭 ──────────────────────────────────────────────────────────────
 (function initStatus() {
   // 현재 포트폴리오 (1차 완료 후)
@@ -676,6 +848,7 @@ function renderDiagnosis(data) {
 
   document.getElementById('fc-deposit').textContent = dep[9].toLocaleString() + '만원';
   document.getElementById('fc-plan').textContent    = plan[9].toLocaleString() + '만원';
+  updateRebalance();
 })();
 
 // ── 시뮬레이션 계산 ────────────────────────────────────────────────────────────
