@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-27T16:20:58.404340+09:00",
+  "generated_at": "2026-04-28T11:46:23.673015+09:00",
   "data_source": "https://finance.naver.com",
   "overall": "CAUTION",
   "items": [
@@ -13,13 +13,13 @@
       "id": "market_trend",
       "label": "미국 반도체 / KOSPI 최근 흐름",
       "status": "warning",
-      "detail": "출처: Naver Finance · SOX: 10,514 (1개월 +32.0%, 1주 +9.5%) · KOSPI: 6,615 (1개월 +21.6%, 1주 +3.5%) · 주의: KOSPI 1개월 21.6% 급등"
+      "detail": "출처: Naver Finance · SOX: 10,408 (1개월 +37.2%, 1주 +7.9%) · KOSPI: 6,663 (1개월 +26.3%, 1주 +3.8%) · 주의: KOSPI 1개월 26.3% 급등"
     },
     {
       "id": "geopolitical",
       "label": "지정학 리스크 대리 지표 (유가, 환율)",
       "status": "warning",
-      "detail": "출처: Naver Finance · 두바이유: $98.19/배럴 (1개월 -1.4%) · USD/KRW: 1,472원 · 주의: USD/KRW 1472원 - 주의"
+      "detail": "출처: Naver Finance · 두바이유: $100.35/배럴 (1개월 -4.6%) · USD/KRW: 1,474원 · 주의: USD/KRW 1474원 - 주의"
     },
     {
       "id": "fund_status",
