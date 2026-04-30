@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T11:47:23.968381+09:00",
+  "generated_at": "2026-04-30T13:40:29.821624+09:00",
   "data_source": "https://finance.naver.com",
   "overall": "CAUTION",
   "items": [
@@ -13,7 +13,7 @@
       "id": "market_trend",
       "label": "미국 반도체 / KOSPI 최근 흐름",
       "status": "warning",
-      "detail": "출처: Naver Finance · SOX: 10,271 (1개월 +43.8%, 1주 +1.9%) · KOSPI: 6,666 (1개월 +21.7%, 1주 +2.9%) · 주의: KOSPI 1개월 21.7% 급등"
+      "detail": "출처: Naver Finance · SOX: 10,271 (1개월 +43.8%, 1주 +1.9%) · KOSPI: 6,615 (1개월 +20.7%, 1주 +2.2%) · 주의: KOSPI 1개월 20.7% 급등"
     },
     {
       "id": "geopolitical",
