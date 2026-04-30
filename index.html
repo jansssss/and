@@ -114,7 +114,20 @@
   .sc-card-alloc { color: #a0a0b0; font-size: 12px; margin: 4px 0; }
   .sc-card-final { font-weight: 600; font-size: 14px; }
   .sc-empty { text-align: center; color: #0f3460; padding: 14px; }
-  @media(max-width:900px){ .custom-grid{ grid-template-columns:1fr; } .sc-cards{ grid-template-columns:1fr; } }
+  .future-grid { display: grid; grid-template-columns: 420px 1fr; gap: 20px; }
+  .future-section-title { color: #a0a0b0; font-size: 12px; font-weight: 700; margin: 14px 0 8px; border-top: 1px solid #0f3460; padding-top: 12px; }
+  .future-input-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .future-field label { display: block; color: #a0a0b0; font-size: 12px; margin-bottom: 4px; }
+  .future-field input {
+    width: 100%; background: #0f3460; color: #eaeaea; border: 1px solid #1e3a6e;
+    border-radius: 6px; padding: 8px 10px; font-family: inherit; font-size: 13px;
+  }
+  .future-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
+  .future-card { background: #1a1a2e; border: 1px solid #0f3460; border-radius: 8px; padding: 12px; }
+  .future-card .f-label { color: #a0a0b0; font-size: 12px; margin-bottom: 4px; }
+  .future-card .f-value { font-size: 18px; font-weight: 800; }
+  .future-card .f-sub { color: #a0a0b0; font-size: 11px; margin-top: 4px; }
+  @media(max-width:900px){ .custom-grid,.future-grid{ grid-template-columns:1fr; } .sc-cards,.future-summary{ grid-template-columns:1fr; } }
 
   /* FUND TABLE */
   #fund-filter { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
@@ -261,13 +274,13 @@
     </div>
     <div class="metric-card">
       <div class="label">리빌딩 진행</div>
-      <div class="value" style="color:#4dabf7">1차 완료</div>
-      <div class="sub">2차 기한 경과 · 확인 필요</div>
+      <div class="value" style="color:#4dabf7">2차 부분 실행</div>
+      <div class="sub">운용형 18.6% / 목표 30%</div>
     </div>
     <div class="metric-card">
       <div class="label">실행 판단일</div>
       <div class="value" style="color:#ffd43b">2026-04-30</div>
-      <div class="sub">진단 결과 CAUTION · 축소 검토</div>
+      <div class="sub">MSCI 약 320만원 추가 반영</div>
     </div>
     <div class="metric-card">
       <div class="label">목표 완료 후 기대수익률</div>
@@ -280,13 +293,13 @@
   <div class="card" style="padding:16px 20px;margin-bottom:16px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       <span style="font-weight:700;font-size:14px">&#127381; 운용형 전환 진행률 (목표 30%)</span>
-      <span style="color:#4dabf7;font-weight:700">10% / 30% 완료 확인</span>
+      <span style="color:#4dabf7;font-weight:700">18.6% / 30% 완료</span>
     </div>
     <div class="progress-bar-wrap">
-      <div class="progress-bar-fill" style="width:33.3%"></div>
+      <div class="progress-bar-fill" style="width:62.1%"></div>
     </div>
     <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:12px;color:#a0a0b0">
-      <span>1차 완료 ✅</span><span>2차 기한 경과 ⚠️</span><span>3차 예정 05-10 🔜</span>
+      <span>1차 완료 ✅</span><span>2차 부분 완료 ✅</span><span>잔여 실행 재진단 🔜</span>
     </div>
   </div>
 
@@ -305,19 +318,19 @@
           </div>
         </div>
         <div class="tl-item">
-          <div class="tl-dot next"></div>
+          <div class="tl-dot done"></div>
           <div>
-            <div class="tl-title" style="color:#ffd43b">&#9888;&#65039; 2차 실행 예정일 경과 - 2026-04-10</div>
-            <div class="tl-detail">MSCI AC World 7% + 필라델피아반도체 2% + KOSPI200 1%</div>
-            <div class="tl-amount">미집행 시 5% 이내 축소 검토 · <span style="color:#ffd43b">2026-04-30 진단 CAUTION</span></div>
+            <div class="tl-title" style="color:#00d4aa">&#9989; 2차 부분 실행 완료 - 2026-04-30</div>
+            <div class="tl-detail">MSCI AC World 약 320만원 추가 매수</div>
+            <div class="tl-amount">추가 이동: 3,200,000원 (전체의 약 8.6%) · 반도체/KOSPI200 보류</div>
           </div>
         </div>
         <div class="tl-item">
           <div class="tl-dot later"></div>
           <div>
-            <div class="tl-title" style="color:#a0a0b0">&#128336; 3차 실행 예정 - 2026-05-10</div>
-            <div class="tl-detail">MSCI AC World 6% + 필라델피아반도체 2% + KOSPI200 2%</div>
-            <div class="tl-amount">예정금액: 3,378,721원 · <span style="color:#a0a0b0">실행 전 재진단</span></div>
+            <div class="tl-title" style="color:#a0a0b0">&#128336; 잔여 목표 재진단 - 2026-05-10 전후</div>
+            <div class="tl-detail">최종 목표까지 MSCI 약 180만원 + 반도체 약 132만원 + KOSPI200 약 112만원</div>
+            <div class="tl-amount">잔여 운용형 부족분: 약 424만원 · <span style="color:#a0a0b0">실행 전 재진단</span></div>
           </div>
         </div>
       </div>
@@ -336,11 +349,11 @@
       <div class="rebalance-controls">
         <div class="rebalance-field">
           <label for="rb-deposit">예금형 현재금액(만원)</label>
-          <input id="rb-deposit" type="number" value="3357" min="0" step="1" oninput="updateRebalance()">
+          <input id="rb-deposit" type="number" value="3037" min="0" step="1" oninput="updateRebalance()">
         </div>
         <div class="rebalance-field">
           <label for="rb-msci">MSCI 현재금액(만원)</label>
-          <input id="rb-msci" type="number" value="246" min="0" step="1" oninput="updateRebalance()">
+          <input id="rb-msci" type="number" value="566" min="0" step="1" oninput="updateRebalance()">
         </div>
         <div class="rebalance-field">
           <label for="rb-semi">반도체 현재금액(만원)</label>
@@ -352,7 +365,7 @@
         </div>
         <div class="rebalance-field">
           <label for="rb-target">현재 단계 목표(%)</label>
-          <input id="rb-target" type="number" value="10" min="0" max="100" step="0.5" oninput="updateRebalance()">
+          <input id="rb-target" type="number" value="20" min="0" max="100" step="0.5" oninput="updateRebalance()">
         </div>
         <div class="rebalance-field">
           <label for="rb-final">최종 운용 목표(%)</label>
@@ -400,7 +413,7 @@
   <!-- 체크리스트 + 어드바이스 -->
   <div class="grid-2-eq">
     <div class="card">
-      <h5>&#129302; 2차 미집행분 자동 진단</h5>
+      <h5>&#129302; 잔여 실행 자동 진단</h5>
       <div class="checklist">
         <div class="check-static">&#9744; 예금형 4.9% 고정 계약 조건 변경 여부</div>
         <div class="check-static">&#9744; 미국 대형주 / 반도체 / KOSPI 최근 흐름</div>
@@ -553,6 +566,51 @@
     <h5 style="color:#cc99ff;margin-bottom:14px">시나리오 비교 (최대 3개)</h5>
     <div class="sc-cards" id="sc-cards"></div>
     <div id="scenario-compare-chart"></div>
+  </div>
+  <div class="card">
+    <h5 style="color:#cc99ff;margin-bottom:6px">&#128302; 미래 경험 시뮬레이터</h5>
+    <p style="color:#a0a0b0;font-size:12px;margin-bottom:16px">현재 잔액, 월 불입, 회사 연 1회 불입, 연봉상승률, 상품별 기대수익률을 바꿔 61세까지의 예상 경로를 확인합니다.</p>
+    <div class="future-grid">
+      <div>
+        <div class="future-section-title">기본 조건</div>
+        <div class="future-input-grid">
+          <div class="future-field"><label for="fx-age">현재 나이</label><input id="fx-age" type="number" value="45" min="20" max="70" step="1" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-retire-age">근무 가능 나이</label><input id="fx-retire-age" type="number" value="61" min="45" max="75" step="1" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-personal">월 본인 불입(만원)</label><input id="fx-personal" type="number" value="40" min="0" step="1" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-salary">현재 연봉(만원)</label><input id="fx-salary" type="number" value="4900" min="0" step="100" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-company-pct">회사 불입률(%)</label><input id="fx-company-pct" type="number" value="10" min="0" max="30" step="0.5" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-salary-growth">연봉 상승률(%)</label><input id="fx-salary-growth" type="number" value="4" min="0" max="15" step="0.1" oninput="updateFutureSim()"></div>
+        </div>
+        <div class="future-section-title">현재 포트폴리오(만원)</div>
+        <div class="future-input-grid">
+          <div class="future-field"><label for="fx-deposit">예금/현금성</label><input id="fx-deposit" type="number" value="3037" min="0" step="1" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-msci">MSCI AC World</label><input id="fx-msci" type="number" value="566" min="0" step="1" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-semi">필라델피아반도체</label><input id="fx-semi" type="number" value="130" min="0" step="1" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-kospi">KOSPI200</label><input id="fx-kospi" type="number" value="0" min="0" step="1" oninput="updateFutureSim()"></div>
+        </div>
+        <div class="future-section-title">기대수익률(%/년)</div>
+        <div class="future-input-grid">
+          <div class="future-field"><label for="fx-r-deposit">예금/현금성</label><input id="fx-r-deposit" type="number" value="4.9" min="0" max="20" step="0.1" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-r-msci">MSCI AC World</label><input id="fx-r-msci" type="number" value="7.0" min="-20" max="30" step="0.1" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-r-semi">필라델피아반도체</label><input id="fx-r-semi" type="number" value="8.0" min="-20" max="40" step="0.1" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-r-kospi">KOSPI200</label><input id="fx-r-kospi" type="number" value="5.5" min="-20" max="30" step="0.1" oninput="updateFutureSim()"></div>
+        </div>
+        <div class="future-section-title">향후 납입 배분(%)</div>
+        <div class="future-input-grid">
+          <div class="future-field"><label for="fx-w-deposit">예금/현금성</label><input id="fx-w-deposit" type="number" value="70" min="0" max="100" step="1" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-w-msci">MSCI AC World</label><input id="fx-w-msci" type="number" value="20" min="0" max="100" step="1" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-w-semi">필라델피아반도체</label><input id="fx-w-semi" type="number" value="7" min="0" max="100" step="1" oninput="updateFutureSim()"></div>
+          <div class="future-field"><label for="fx-w-kospi">KOSPI200</label><input id="fx-w-kospi" type="number" value="3" min="0" max="100" step="1" oninput="updateFutureSim()"></div>
+        </div>
+        <div class="warn-box" id="future-warn"></div>
+      </div>
+      <div>
+        <div class="future-summary" id="future-summary"></div>
+        <div class="card" style="padding:12px;margin-bottom:14px"><div id="future-balance-chart"></div></div>
+        <div class="card" style="padding:12px;margin-bottom:0"><div id="future-alloc-chart"></div></div>
+      </div>
+    </div>
+    <div style="overflow-x:auto;margin-top:16px"><table class="sim-table" id="future-table"></table></div>
   </div>
 </div>
 
@@ -848,10 +906,10 @@ function updateRebalance() {
 
 // ── 운용 현황 탭 ──────────────────────────────────────────────────────────────
 (function initStatus() {
-  // 현재 포트폴리오 (1차 완료 후)
+  // 현재 포트폴리오 (2차 부분 실행 후)
   Plotly.newPlot('plot-current-alloc', [{
     labels: ['예금/현금성', 'MSCI AC World', '필라델피아반도체'],
-    values: [89.93, 6.60, 3.47],
+    values: [81.36, 15.17, 3.47],
     type: 'pie', hole: 0.5,
     marker: { colors: ['#4a5568', '#4dabf7', '#e94560'] },
     textinfo: 'label+percent',
@@ -859,7 +917,7 @@ function updateRebalance() {
   }], {
     paper_bgcolor: '#16213e',
     font: { color: '#eaeaea', family: 'Malgun Gothic' },
-    title: { text: '현재 포트폴리오 (2026-04-30)', font: { size: 14, color: '#ffd43b' } },
+    title: { text: '현재 포트폴리오 (2차 부분 실행 후)', font: { size: 14, color: '#ffd43b' } },
     height: 300, margin: { t: 50, r: 10, b: 10, l: 10 },
     showlegend: true, legend: { bgcolor: '#16213e', orientation: 'h', y: -0.1 }
   }, { responsive: true });
@@ -1321,12 +1379,213 @@ function renderScenarios() {
   }, {responsive:true});
 }
 
+// ── 미래 경험 시뮬레이터 ─────────────────────────────────────────────────────
+function fxNumber(id) {
+  const el = document.getElementById(id);
+  return el ? (parseFloat(el.value) || 0) : 0;
+}
+
+function fmtMoneyMan(v) {
+  return Math.round(v).toLocaleString() + '만원';
+}
+
+function getFutureInputs() {
+  const current = [
+    fxNumber('fx-deposit'),
+    fxNumber('fx-msci'),
+    fxNumber('fx-semi'),
+    fxNumber('fx-kospi'),
+  ];
+  const rates = [
+    fxNumber('fx-r-deposit'),
+    fxNumber('fx-r-msci'),
+    fxNumber('fx-r-semi'),
+    fxNumber('fx-r-kospi'),
+  ];
+  const rawWeights = [
+    fxNumber('fx-w-deposit'),
+    fxNumber('fx-w-msci'),
+    fxNumber('fx-w-semi'),
+    fxNumber('fx-w-kospi'),
+  ];
+  const weightSum = rawWeights.reduce((s, v) => s + v, 0);
+  let weights = [...rawWeights];
+  let weightNote = '합계 100%';
+  let weightStatus = 'ok';
+
+  if (weightSum < 100) {
+    weights[0] += 100 - weightSum;
+    weightNote = `합계 ${weightSum.toFixed(0)}%. 남은 ${(100 - weightSum).toFixed(0)}%는 예금형으로 배분.`;
+    weightStatus = 'low';
+  } else if (weightSum > 100) {
+    weights = rawWeights.map(v => v / weightSum * 100);
+    weightNote = `합계 ${weightSum.toFixed(0)}%. 입력 비율대로 100%로 정규화.`;
+    weightStatus = 'high';
+  }
+
+  return {
+    age: fxNumber('fx-age'),
+    retireAge: fxNumber('fx-retire-age'),
+    years: Math.max(0, Math.round(fxNumber('fx-retire-age') - fxNumber('fx-age'))),
+    monthlyPersonal: fxNumber('fx-personal'),
+    salary: fxNumber('fx-salary'),
+    companyPct: fxNumber('fx-company-pct'),
+    salaryGrowth: fxNumber('fx-salary-growth'),
+    current,
+    rates,
+    weights: weights.map(v => v / 100),
+    rawWeightSum: weightSum,
+    weightNote,
+    weightStatus,
+  };
+}
+
+function runFutureProjection(input, depositOnly=false) {
+  const labels = ['예금/현금성', 'MSCI AC World', '필라델피아반도체', 'KOSPI200'];
+  const colors = ['#6c757d', '#4dabf7', '#e94560', '#00d4aa'];
+  const balances = depositOnly ? [input.current.reduce((s,v)=>s+v,0), 0, 0, 0] : [...input.current];
+  const rates = depositOnly ? [input.rates[0], input.rates[0], input.rates[0], input.rates[0]] : input.rates;
+  const weights = depositOnly ? [1, 0, 0, 0] : input.weights;
+  const rows = [];
+  const snapshots = [];
+  let totalPersonal = 0;
+  let totalCompany = 0;
+
+  const pushSnapshot = (year, salary, contribution) => {
+    const total = balances.reduce((s, v) => s + v, 0);
+    rows.push({
+      year,
+      age: input.age + year,
+      salary,
+      contribution,
+      total,
+      balances: [...balances],
+    });
+    snapshots.push({ year, total, balances: [...balances] });
+  };
+
+  pushSnapshot(0, input.salary, 0);
+  for (let year = 1; year <= input.years; year++) {
+    const salary = input.salary * Math.pow(1 + input.salaryGrowth / 100, year - 1);
+    let yearlyContribution = 0;
+    for (let month = 1; month <= 12; month++) {
+      balances.forEach((_, i) => {
+        balances[i] *= 1 + rates[i] / 100 / 12;
+        const contribution = input.monthlyPersonal * weights[i];
+        balances[i] += contribution;
+        yearlyContribution += contribution;
+        totalPersonal += contribution;
+      });
+    }
+    const companyContribution = salary * input.companyPct / 100;
+    balances.forEach((_, i) => {
+      const contribution = companyContribution * weights[i];
+      balances[i] += contribution;
+      yearlyContribution += contribution;
+      totalCompany += contribution;
+    });
+    pushSnapshot(year, salary, yearlyContribution);
+  }
+
+  return { labels, colors, rows, snapshots, final: rows[rows.length - 1], totalPersonal, totalCompany };
+}
+
+function updateFutureSim() {
+  const input = getFutureInputs();
+  const warn = document.getElementById('future-warn');
+  if (warn) {
+    const color = input.weightStatus === 'ok' ? '#00d4aa' : input.weightStatus === 'high' ? '#e94560' : '#ffd43b';
+    warn.innerHTML = `<span style="color:${color}">${input.weightNote}</span>`;
+  }
+
+  const projection = runFutureProjection(input);
+  const depositProjection = runFutureProjection(input, true);
+  const final = projection.final.total;
+  const depositFinal = depositProjection.final.total;
+  const currentTotal = input.current.reduce((s, v) => s + v, 0);
+  const futureContrib = projection.totalPersonal + projection.totalCompany;
+  const gain = final - currentTotal - futureContrib;
+  const excess = final - depositFinal;
+  const finalAlloc = projection.final.balances.map(v => final > 0 ? v / final * 100 : 0);
+
+  document.getElementById('future-summary').innerHTML = `
+    <div class="future-card"><div class="f-label">${input.retireAge.toFixed(0)}세 예상금액</div><div class="f-value" style="color:#cc99ff">${fmtMoneyMan(final)}</div><div class="f-sub">${input.years}년 운용 기준</div></div>
+    <div class="future-card"><div class="f-label">예금 100% 대비</div><div class="f-value" style="color:${excess >= 0 ? '#00d4aa' : '#e94560'}">${excess >= 0 ? '+' : ''}${fmtMoneyMan(excess)}</div><div class="f-sub">동일 불입 조건 비교</div></div>
+    <div class="future-card"><div class="f-label">총 추가 불입</div><div class="f-value" style="color:#4dabf7">${fmtMoneyMan(futureContrib)}</div><div class="f-sub">본인 ${fmtMoneyMan(projection.totalPersonal)} + 회사 ${fmtMoneyMan(projection.totalCompany)}</div></div>
+    <div class="future-card"><div class="f-label">운용 수익</div><div class="f-value" style="color:#ffd43b">${fmtMoneyMan(gain)}</div><div class="f-sub">현재 평가금 제외 순증</div></div>`;
+
+  const years = projection.snapshots.map(s => s.year);
+  Plotly.react('future-balance-chart', [
+    {
+      x: years,
+      y: projection.snapshots.map(s => s.total),
+      name: '현재 전략',
+      mode: 'lines+markers',
+      line: { color: '#cc99ff', width: 4 },
+      marker: { size: 6 },
+      hovertemplate: '<b>현재 전략</b><br>%{x}년 후: %{y:,.0f}만원<extra></extra>',
+    },
+    {
+      x: years,
+      y: depositProjection.snapshots.map(s => s.total),
+      name: '예금 100%',
+      mode: 'lines',
+      line: { color: '#6c757d', width: 2, dash: 'dot' },
+      hovertemplate: '<b>예금 100%</b><br>%{x}년 후: %{y:,.0f}만원<extra></extra>',
+    },
+  ], {
+    paper_bgcolor:'#16213e', plot_bgcolor:'#16213e',
+    font:{color:'#eaeaea',family:'Malgun Gothic'},
+    title:{text:`미래 자산 경로: ${fmtMoneyMan(final)}`, font:{size:15,color:'#cc99ff'}},
+    xaxis:{title:'경과 연수',gridcolor:'#0f3460',ticksuffix:'년'},
+    yaxis:{title:'적립금 (만원)',gridcolor:'#0f3460',tickformat:',.0f',ticksuffix:'만'},
+    legend:{bgcolor:'#1a1a2e'}, hovermode:'x unified',
+    height:320, margin:{t:50,r:20,b:50,l:80},
+  }, {responsive:true});
+
+  const assetTraces = projection.labels.map((label, i) => ({
+    x: years,
+    y: projection.snapshots.map(s => s.balances[i]),
+    name: label,
+    type: 'scatter',
+    mode: 'lines',
+    stackgroup: 'one',
+    line: { color: projection.colors[i], width: 1 },
+    hovertemplate: `<b>${label}</b><br>%{x}년 후: %{y:,.0f}만원<extra></extra>`,
+  }));
+  Plotly.react('future-alloc-chart', assetTraces, {
+    paper_bgcolor:'#16213e', plot_bgcolor:'#16213e',
+    font:{color:'#eaeaea',family:'Malgun Gothic'},
+    title:{text:`${input.retireAge.toFixed(0)}세 예상 비중: 예금 ${finalAlloc[0].toFixed(1)}% · MSCI ${finalAlloc[1].toFixed(1)}% · 반도체 ${finalAlloc[2].toFixed(1)}% · KOSPI ${finalAlloc[3].toFixed(1)}%`, font:{size:14,color:'#ffd43b'}},
+    xaxis:{title:'경과 연수',gridcolor:'#0f3460',ticksuffix:'년'},
+    yaxis:{title:'자산별 금액 (만원)',gridcolor:'#0f3460',tickformat:',.0f',ticksuffix:'만'},
+    legend:{bgcolor:'#1a1a2e', orientation:'h', y:-0.24},
+    hovermode:'x unified', height:320, margin:{t:60,r:20,b:70,l:80},
+  }, {responsive:true});
+
+  const visibleRows = projection.rows.filter((_, i) => i === 0 || i === projection.rows.length - 1 || i % 2 === 0);
+  document.getElementById('future-table').innerHTML = `<thead><tr>
+    <th>경과</th><th>나이</th><th>연봉</th><th>해당연도 불입</th><th>총액</th><th>예금</th><th>MSCI</th><th>반도체</th><th>KOSPI200</th>
+  </tr></thead><tbody>${visibleRows.map(r => `<tr>
+    <td>${r.year}년</td>
+    <td>${r.age.toFixed(0)}세</td>
+    <td>${fmtMoneyMan(r.salary)}</td>
+    <td>${fmtMoneyMan(r.contribution)}</td>
+    <td class="highlight">${fmtMoneyMan(r.total)}</td>
+    <td>${fmtMoneyMan(r.balances[0])}</td>
+    <td>${fmtMoneyMan(r.balances[1])}</td>
+    <td>${fmtMoneyMan(r.balances[2])}</td>
+    <td>${fmtMoneyMan(r.balances[3])}</td>
+  </tr>`).join('')}</tbody>`;
+}
+
 let customReady = false;
 function initCustom() {
   if (customReady) return;
   customReady = true;
   buildSliders();
   renderScenarios();
+  updateFutureSim();
 }
 
 // ── 전략 탭 ──────────────────────────────────────────────────────────────────
