@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-02T11:35:15.431963+09:00",
+  "generated_at": "2026-05-03T11:46:25.574280+09:00",
   "data_source": "https://finance.naver.com",
   "overall": "CAUTION",
   "items": [
@@ -19,7 +19,7 @@
       "id": "geopolitical",
       "label": "지정학 리스크 대리 지표 (유가, 환율)",
       "status": "warning",
-      "detail": "출처: Naver Finance · 두바이유: $100.86/배럴 (1개월 -4.1%) · USD/KRW: 1,475원 · 주의: USD/KRW 1475원 - 주의"
+      "detail": "출처: Naver Finance · 두바이유: $100.86/배럴 (1개월 -4.1%) · USD/KRW: 1,477원 · 주의: USD/KRW 1477원 - 주의"
     },
     {
       "id": "fund_status",
