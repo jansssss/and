@@ -34,11 +34,11 @@ DF = load_fund_data()
 
 # ─── 사용자 프로필 ────────────────────────────────────────────────────────────
 USER = {
-    'current': 3800,      # 만원
+    'current': 3763,       # 만원 (2026-05-13 평가금액: 37,628,725원)
     'company_annual': 500, # 만원/년
     'personal_annual': 400,# 만원/년
     'years': 15,           # 정년까지 연수
-    'current_rate': 4.5,   # 현 예금 이자율 %
+    'current_rate': 4.5,   # 현 예금 이자율 % (예금 100% 기준선)
 }
 
 # ─── 포트폴리오 추천 (BlackRock 전략) ─────────────────────────────────────────
@@ -206,7 +206,7 @@ app.layout = html.Div(style={'backgroundColor': COLORS['bg'], 'minHeight': '100v
                 html.P('과학기술공제회 | BlackRock 운용 전략 기반 포트폴리오 추천', style={'color': COLORS['muted'], 'margin': '6px 0 0 0', 'fontSize': '14px'}),
             ]),
             html.Div(style={'textAlign': 'right'}, children=[
-                html.Span('📅 진단 2026.04.27 / 펀드 2026.03.10', style={'color': COLORS['muted'], 'fontSize': '13px'}),
+                html.Span('📅 2026.05.13 기준', style={'color': COLORS['muted'], 'fontSize': '13px'}),
                 html.Br(),
                 html.Span(f"📊 분석 대상: {len(DF)}개 퇴직연금 펀드", style={'color': COLORS['yellow'], 'fontSize': '13px'}),
             ])
@@ -218,11 +218,11 @@ app.layout = html.Div(style={'backgroundColor': COLORS['bg'], 'minHeight': '100v
         # ── 내 현황 요약 카드 ──
         html.H4('📌 나의 퇴직연금 현황', style={'color': COLORS['yellow'], 'marginBottom': '16px'}),
         html.Div(style={'display': 'grid', 'gridTemplateColumns': 'repeat(5, 1fr)', 'gap': '16px', 'marginBottom': '28px'}, children=[
-            metric_card('현재 적립금', '3,800만원', '총 불입금액', COLORS['green']),
+            metric_card('현재 적립금', '3,763만원', '2026-05-13 평가금액', COLORS['green']),
             metric_card('연간 불입', '900만원', '회사 500 + 본인 400', COLORS['blue']),
             metric_card('정년까지', '15년', '장기 투자 가능', COLORS['yellow']),
-            metric_card('현재 수익률', '4.5%/년', '예금 100% 운용 중', COLORS['muted']),
-            metric_card('예상 총 불입', '1억 3,500만원', '현재 + 15년×900만원', COLORS['gold']),
+            metric_card('현재 포트폴리오', '예금 80.6%', 'MSCI 15.6% / 반도체 3.9%', COLORS['blue']),
+            metric_card('목표까지 잔여', '약 398만원', '예금→주식형 이동 필요', COLORS['gold']),
         ]),
 
         # ── 탭 ──

@@ -268,8 +268,13 @@ def main():
         action_items = [
             {
                 "type": "confirm",
-                "title": "2차 계획 실행",
-                "detail": "MSCI AC World 7% + 필라델피아반도체 2% + KOSPI200 1% - 예정금액 3,378,721원.",
+                "title": "1차 집행: MSCI + 필라델피아",
+                "detail": "MSCI AC World 1,669,706원 + 필라델피아반도체 1,182,865원 — 합계 약 2,852,571원."
+            },
+            {
+                "type": "confirm",
+                "title": "2차 집행 (2주 후): KOSPI200",
+                "detail": "삼성퇴직연금KOSPI200 1,128,862원 — 전체 잔여 집행 완료 후 목표 비중 달성."
             },
             {
                 "type": "confirm",
