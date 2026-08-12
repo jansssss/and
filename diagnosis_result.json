@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-08-11T10:28:11.794821+09:00",
+  "generated_at": "2026-08-12T10:46:11.635146+09:00",
   "data_source": "https://finance.naver.com",
-  "overall": "HOLD",
+  "overall": "CAUTION",
   "items": [
     {
       "id": "deposit_rate",
@@ -12,14 +12,14 @@
     {
       "id": "market_trend",
       "label": "미국 반도체 / KOSPI 최근 흐름",
-      "status": "fail",
-      "detail": "출처: Naver Finance · SOX: 11,994 (1개월 -7.5%, 1주 -1.5%) · KOSPI: 6,334 (1개월 -15.3%, 1주 -4.0%) · 주의: KOSPI 1개월 -15.3% 급락"
+      "status": "pass",
+      "detail": "출처: Naver Finance · SOX: 12,098 (1개월 -2.0%, 1주 +0.7%) · KOSPI: 6,569 (1개월 -3.5%, 1주 +4.3%)"
     },
     {
       "id": "geopolitical",
       "label": "지정학 리스크 대리 지표 (유가, 환율)",
       "status": "warning",
-      "detail": "출처: Naver Finance · 두바이유: $84.06/배럴 (1개월 +21.5%) · USD/KRW: 1,413원 · 주의: 두바이유 1개월 +21% 상승"
+      "detail": "출처: Naver Finance · 두바이유: $84.56/배럴 (1개월 +15.2%) · USD/KRW: 1,415원 · 주의: 두바이유 1개월 +15% 상승"
     },
     {
       "id": "fund_status",
@@ -28,18 +28,18 @@
       "detail": "미래에셋 MSCI AC World · 유리 필라델피아반도체 · 삼성 KOSPI200 - 매수 화면에서 판매 여부와 총보수 최종 확인 필요."
     }
   ],
-  "recommendation": "추가 실행 보류 권고",
-  "reason": "위험 항목 감지. 2차 미집행분이 있다면 오늘 집행하지 말고 유가·환율 안정 후 재진단.",
+  "recommendation": "신중 검토 후 축소 진행",
+  "reason": "주의 항목 감지. 2차 실행 예정일은 이미 지났으므로, 미집행 상태라면 금액 축소 또는 MSCI 코어 우선이 적절.",
   "action_items": [
     {
-      "type": "defer",
-      "title": "2차 미집행분 보류",
-      "detail": "원래 4월 10일 2차 계획은 기한 경과 상태다. 오늘 기준 위험 항목이 해소될 때까지 신규 매수 보류."
+      "type": "modify",
+      "title": "2차 미집행분은 50% 축소",
+      "detail": "원래 10% 대신 5% 이내로 먼저 집행. MSCI AC World를 우선하고 반도체·KOSPI200 추가 비중은 다음 재진단까지 보류."
     },
     {
       "type": "monitor",
-      "title": "재진단 조건",
-      "detail": "USD/KRW 1,450원 이하, 유가 1개월 급등 완화, KOSPI/SOX 급락 없음 조건을 다시 확인."
+      "title": "3차 전 재진단",
+      "detail": "2026-05-10 전 다시 Naver Finance 기준으로 유가·환율·KOSPI·SOX를 확인."
     }
   ]
 }
